@@ -1,0 +1,83 @@
+<?xml version="1.0" ?>
+        <makefile>
+	<using module="datafiles"/>
+                        <include file="wxbase.bkl"/>
+<set var="MYSQL_DIR_DEFAULT" overwrite="0">C:\Program Files\MySQL\MySQL Server 5.0</set>
+<set var="MYSQLPP_DIR_DEFAULT" overwrite="0">C:\mysql++</set>
+
+     <option name="MYSQL_DIR" category="path">
+         <default-value>$(MYSQL_DIR_DEFAULT)</default-value>
+         <description>
+             The directory where Mysql Server installed
+         </description>
+     </option>
+     <option name="MYSQLPP_DIR" category="path">
+         <default-value>$(MYSQLPP_DIR_DEFAULT)</default-value>
+         <description>
+             The directory where Mysql++ is installed
+         </description>
+     </option>
+
+
+                <set-srcdir>src</set-srcdir>                
+                <exe id="estes" template="wx,wxbase">
+                        <app-type>gui</app-type>
+<if cond = "TARGETING_WIN32=='0'">
+<include>/usr/include/mysql</include>
+<include>/usr/include/mysql++</include>
+</if>
+
+<if cond = "TARGETING_WIN32=='1'">
+<include>"$(MYSQL_DIR)\include"</include>
+<include>"$(MYSQLPP_DIR)\include"</include>
+<lib-path>"$(MYSQLPP_DIR)"</lib-path>
+<lib-path>"$(MYSQL_DIR)\lib\opt"</lib-path>
+</if>
+                        <win32-res>res/resource.rc</win32-res>
+
+                        <sources>
+settings.cpp 
+add_zero.cpp
+editmenu.cpp
+dish_props.cpp
+restaurant_posApp.cpp
+taxes.cpp
+wx_std.cpp
+product_stats.cpp
+prog_set_panel.cpp
+add_item.cpp
+payment.cpp
+perif.cpp
+waiter_choose.cpp
+display_settings.cpp
+db_set_panel.cpp
+stats_today.cpp
+cash.cpp
+backup.cpp
+workers.cpp
+restaurant_posMain.cpp
+</sources>
+
+
+                        <sys-lib>mysqlpp</sys-lib>
+				<sys-lib>mysqlclient</sys-lib>
+<install-to>$(BINDIR)</install-to>
+                </exe>
+
+<if cond = "TARGETING_WIN32=='0'">
+		<data-files>
+			<files>../share/estes/table_schema.sql</files>
+			<install-to>$(DATADIR)/estes</install-to>
+		</data-files>
+		<data-files-tree>
+<srcdir>share</srcdir>
+			<files>
+locale/pl/LC_MESSAGES/estes.mo
+locale/es/LC_MESSAGES/estes.mo
+locale/ru/LC_MESSAGES/estes.mo
+</files>
+			<install-to>$(DATADIR)</install-to>
+		</data-files-tree>
+</if>
+
+        </makefile> 

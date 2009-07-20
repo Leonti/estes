@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="restaurant_pos" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Option show_notes="0">
+			<notes>
+				<![CDATA[How to get next id in autoincrement or last one]]>
+			</notes>
+		</Option>
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/restaurant_pos" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/restaurant_pos" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="`wx-config --cflags`" />
+			<Add option="-Wall" />
+		</Compiler>
+		<Linker>
+			<Add option="`wx-config --libs`" />
+		</Linker>
+		<Unit filename="src/add_item.cpp" />
+		<Unit filename="src/add_item.h" />
+		<Unit filename="src/add_zero.cpp" />
+		<Unit filename="src/add_zero.h" />
+		<Unit filename="src/backup.cpp" />
+		<Unit filename="src/backup.h" />
+		<Unit filename="src/cash.cpp" />
+		<Unit filename="src/cash.h" />
+		<Unit filename="src/db_set_panel.cpp" />
+		<Unit filename="src/db_set_panel.h" />
+		<Unit filename="src/dish_props.cpp" />
+		<Unit filename="src/dish_props.h" />
+		<Unit filename="src/display_settings.cpp" />
+		<Unit filename="src/display_settings.h" />
+		<Unit filename="src/editmenu.cpp" />
+		<Unit filename="src/editmenu.h" />
+		<Unit filename="src/payment.cpp" />
+		<Unit filename="src/payment.h" />
+		<Unit filename="src/perif.cpp" />
+		<Unit filename="src/perif.h" />
+		<Unit filename="src/product_stats.cpp" />
+		<Unit filename="src/product_stats.h" />
+		<Unit filename="src/prog_set_panel.cpp" />
+		<Unit filename="src/prog_set_panel.h" />
+		<Unit filename="src/perif_set_panel.cpp" />
+		<Unit filename="src/perif_set_panel.h" />
+		<Unit filename="src/restaurant_posApp.cpp" />
+		<Unit filename="src/restaurant_posApp.h" />
+		<Unit filename="src/restaurant_posMain.cpp" />
+		<Unit filename="src/restaurant_posMain.h" />
+		<Unit filename="src/settings.cpp" />
+		<Unit filename="src/settings.h" />
+		<Unit filename="src/stats_today.cpp" />
+		<Unit filename="src/stats_today.h" />
+		<Unit filename="src/taxes.cpp" />
+		<Unit filename="src/taxes.h" />
+		<Unit filename="src/waiter_choose.cpp" />
+		<Unit filename="src/waiter_choose.h" />
+		<Unit filename="src/workers.cpp" />
+		<Unit filename="src/workers.h" />
+		<Unit filename="src/wx_std.cpp" />
+		<Unit filename="src/wx_std.h" />
+		<Unit filename="src/wxsmith/restaurant_posframe.wxs" />
+		<Unit filename="src/wxsmith/settings.wxs" />
+		<Extensions>
+			<envvars />
+			<code_completion />
+			<debugger />
+			<lib_finder disable_auto="1" />
+			<wxsmith version="1">
+				<gui name="wxWidgets" src="src/restaurant_posApp.cpp" main="restaurant_posFrame" init_handlers="necessary" language="CPP" />
+				<resources>
+					<wxFrame wxs="wxsmith/restaurant_posframe.wxs" src="src/restaurant_posMain.cpp" hdr="src/restaurant_posMain.h" name="restaurant_posFrame" language="CPP" />
+					<wxFrame wxs="wxsmith/add_item.wxs" src="src/add_item.cpp" hdr="src/add_item.h" name="add_item" language="CPP" />
+					<wxDialog wxs="wxsmith/editmenu.wxs" src="src/editmenu.cpp" hdr="src/editmenu.h" name="editmenu" language="CPP" />
+					<wxDialog wxs="wxsmith/dish_props.wxs" src="src/dish_props.cpp" hdr="src/dish_props.h" name="dish_props" language="CPP" />
+					<wxDialog wxs="wxsmith/taxes.wxs" src="src/taxes.cpp" hdr="src/taxes.h" name="taxes" language="CPP" />
+					<wxDialog wxs="wxsmith/workers.wxs" src="src/workers.cpp" hdr="src/workers.h" name="workers" language="CPP" />
+					<wxPanel wxs="wxsmith/db_set_panel.wxs" src="src/db_set_panel.cpp" hdr="src/db_set_panel.h" name="db_set_panel" language="CPP" />
+					<wxPanel wxs="wxsmith/prog_set_panel.wxs" src="src/prog_set_panel.cpp" hdr="src/prog_set_panel.h" name="prog_set_panel" language="CPP" />
+					<wxPanel wxs="wxsmith/perif_set_panel.wxs" src="src/perif_set_panel.cpp" hdr="src/perif_set_panel.h" name="perif_set_panel" language="CPP" />
+					<wxDialog wxs="wxsmith/settings.wxs" src="src/settings.cpp" hdr="src/settings.h" name="settings" language="CPP" />
+					<wxDialog wxs="wxsmith/payment.wxs" src="src/payment.cpp" hdr="src/payment.h" name="payment" language="CPP" />
+					<wxDialog wxs="wxsmith/cash.wxs" src="src/cash.cpp" hdr="src/cash.h" name="cash" language="CPP" />
+					<wxDialog wxs="wxsmith/waiter_choose.wxs" src="src/waiter_choose.cpp" hdr="src/waiter_choose.h" name="waiter_choose" language="CPP" />
+					<wxDialog wxs="wxsmith/display_settings.wxs" src="src/display_settings.cpp" hdr="src/display_settings.h" name="display_settings" language="CPP" />
+					<wxDialog wxs="wxsmith/stats_today.wxs" src="src/stats_today.cpp" hdr="src/stats_today.h" name="stats_today" language="CPP" />
+					<wxDialog wxs="wxsmith/product_stats.wxs" src="src/product_stats.cpp" hdr="src/product_stats.h" name="product_stats" language="CPP" />
+				</resources>
+			</wxsmith>
+			<AutoVersioning>
+				<Scheme minor_max="10" build_max="0" rev_max="0" rev_rand_max="10" build_times_to_increment_minor="100" />
+				<Settings autoincrement="1" date_declarations="1" do_auto_increment="0" ask_to_increment="0" language="C++" svn="0" svn_directory="" header_path="version.h" />
+				<Changes_Log show_changes_editor="0" app_title="released version %M.%m.%b of %p" changeslog_path="ChangesLog.txt" />
+			</AutoVersioning>
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

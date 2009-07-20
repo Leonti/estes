@@ -1,0 +1,53 @@
+8
+
+dir
+2
+https://etm.svn.sourceforge.net/svnroot/etm/timelogger/trunk/share/locale/pl/LC_MESSAGES
+https://etm.svn.sourceforge.net/svnroot/etm
+
+
+
+2008-05-05T14:27:28.420591Z
+2
+leonti
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+dd934947-7c4c-0410-934d-86067993620e
+
+messages.po
+file
+
+
+
+
+2008-05-05T14:40:16.000000Z
+b4bcd682a20045fd42a621412ec95d46
+2008-05-05T14:27:28.420591Z
+2
+leonti
+
+timelogger.mo
+file
+
+
+
+
+2008-05-05T14:40:16.000000Z
+9edcad8f90a869958d5a9305eeb2b965
+2008-05-05T14:27:28.420591Z
+2
+leonti
+has-props
+

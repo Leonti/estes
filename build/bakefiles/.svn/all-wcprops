@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svnroot/etm/!svn/ver/1/etmmanager/trunk/build/bakefiles
+END
+wxbase.bkl
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/etm/!svn/ver/1/etmmanager/trunk/build/bakefiles/wxbase.bkl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svnroot/etm/!svn/ver/1/etmmanager/trunk/build/bakefiles/Makefile.in
+END
+configure.ac
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svnroot/etm/!svn/ver/1/etmmanager/trunk/build/bakefiles/configure.ac
+END
+autoconf_inc.m4
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svnroot/etm/!svn/ver/1/etmmanager/trunk/build/bakefiles/autoconf_inc.m4
+END
+etmmanager.bkl
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svnroot/etm/!svn/ver/1/etmmanager/trunk/build/bakefiles/etmmanager.bkl
+END
+makefile.gcc
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svnroot/etm/!svn/ver/1/etmmanager/trunk/build/bakefiles/makefile.gcc
+END

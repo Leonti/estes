@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<wxsmith>
+	<object class="wxFrame" name="add_item">
+		<title>Add item</title>
+		<id_arg>0</id_arg>
+		<style>wxDEFAULT_FRAME_STYLE|wxRESIZE_BORDER|wxFRAME_FLOAT_ON_PARENT</style>
+	</object>
+</wxsmith>

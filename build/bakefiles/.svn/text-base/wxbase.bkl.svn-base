@@ -1,0 +1,681 @@
+<?xml version="1.0" ?>
+ <!--    Above is just a doctype definition signifying that          -->
+ <!--    this file is an xml file (which a bakefile is)              -->
+ 
+ <!-- Original source: http://wiki.wxwidgets.org/wiki.pl?Bakefile    -->
+ <!-- Modified by: Francesco Montorsi <frm@users.sourceforge.net>    -->
+ <!-- Creation date: 6/9/2004                                        -->
+ <!-- Last revision: 21/8/2005                                       -->
+ 
+ 
+ <!--                          GENERIC WXWIDGETS BAKEFILE                              -->
+ <!--                                                                                  -->
+ <!-- This is a generic bakefile, heavily commented for explanatory reasons.           -->
+ <!-- This bakefile provides some wxWidgets stuff that can be used alternatively to    -->
+ <!-- the official                                                                     -->
+ <!--                         wx.bkl, wx_win32.bkl, wx_unix.bkl                        -->
+ <!-- files which are shipped with wxWidgets.                                          -->
+ <!--                                                                                  -->
+ <!-- 1) Why should I use wxbase.bkl and not the wx official bakefiles ?               -->
+ <!--    Well, the official wxWidgets bakefiles force you to use a different set       -->
+ <!--    of options for the wx library (WX_DEBUG, WX_UNICODE...) and your lib/app      -->
+ <!--    (which probably needs build options like DEBUG, UNICODE...).                  -->
+ <!--    Obviously you can use wx options also for your project (that is, when         -->
+ <!--    WX_DEBUG=='1' you build your project in debug mode and against a debug        -->
+ <!--    build of your project).                                                       -->
+ <!--    This one is probably the behaviour you want from your build system: rarely    -->
+ <!--    you'll need to build your project in release mode and then link against a     -->
+ <!--    debug version of wxWidgets (or viceversa).                                    -->
+ <!--    So, you want your options synchronized but you also don't want to force the   -->
+ <!--    user to use WX_DEBUG, WX_UNICODE, WX_SHARED... options because you are used   -->
+ <!--    to have MYPROJECT_BUILD=debug/release/myhybridcfg, MYPROJECT_UNICODE,         -->
+ <!--    MYPROJECT_SHARED... options.                                                  -->
+ <!--    There are no ways to rename options in Bakefile once they have been defined.  -->
+ <!--                                                                                  -->
+ <!-- 2) Thus, I should use wxbase.bkl only for aesthetical reasons (that is, to use   -->
+ <!--    options with names different from WX_DEBUG, WX_UNICODE...) ?                  -->
+ <!--    Yes; this is the reason I use wxbase.bkl instead of wx standard bakefiles.    -->
+ <!--    However, there is another important reason: this is a single bakefile which   -->
+ <!--    contains all the wx settings and this makes it very portable and also easy    -->
+ <!--    to customize by advanced bakefile users for their needs.                      -->
+ <!--    In fact, one of the most important thing of wxbase.bkl is that it's almost    -->
+ <!--    completely compatible with wx official bakefiles since everything (except     -->
+ <!--    the options, obviously!) use the same names used by wx&co bakefiles.          -->
+ <!--    This makes very easy to swap wx.bkl with wxbase.bkl.                          -->
+ <!--                                                                                  -->
+ <!--    This bakefile provides:                                                       -->
+ <!--    1) SHARED=1/0, UNICODE=0/1, BUILD=debug/release,                              -->
+ <!--       WX_VERSION=25/26/.., WX_DIR=$(WXWIN) options;                              -->
+ <!--                                                                                  -->
+ <!--    2) the variables provided by wx_win32.bkl:                                    -->
+ <!--           WXUNICODE_DEFINE, WXLIBPOSTFIX, WXLIBSUBPOSTFIX, ...                   -->
+ <!--       and some others to support debug/release builds:                           -->
+ <!--           DEBUGINFO, DEBUGRUNTIME, OPTIMIZEFLAG, WARNINGS                        -->
+ <!--                                                                                  -->
+ <!--    3) the <wx-lib> tag and the 'wx' and 'wx-lib' templates which are identic     -->
+ <!--       to the wx hononymous.                                                      -->
+ <!--                                                                                  -->
+ <!--    5) the 'wxbase' template which can be used to add the support for the         -->
+ <!--       SHARED,UNICODE,BUILD options.                                              -->
+ <!--                                                                                  -->
+ 
+ 
+ <!--                                                                -->
+ <!--           SOME NOTES ABOUT WXBASE TEMPLATE USAGE               -->
+ <!--                                                                -->
+ <!-- 1) You must always remember to define the APP-TYPE, if you     -->
+ <!--    are building an application (and not a library)             -->
+ <!-- 2) The compilers tested successfully with the WXBASE template  -->
+ <!--    (and a simple exe/lib target, obviously !) are:             -->
+ <!--    -> MSVC 6.0                                                 -->
+ <!--    -> BorlandC++ 5.5.1                                         -->
+ <!--    -> MinGW using GCC 3.2.3                                    -->
+ <!--    -> GCC 3.2.3 on a linux distro                              -->
+ <!--    if you find that this template works with other compilers   -->
+ <!--    (supported by Bakefile !) with little or none modifications -->
+ <!--    please notify me.                                           -->
+ <!--                                                                -->
+ 
+ 
+ <!--                                                                -->
+ <!--        A TYPICAL BAKEFILE & CONFIGURE.AC USING WXBASE          -->
+ <!--                                                                -->
+ <!--
+ 
+        <?xml version="1.0" ?>
+        <makefile>
+        
+                <include file="wxbase.bkl"/>
+                
+                <exe id="myprog" template="wx,wxbase">
+                        <app-type>gui</app-type>
+                        <sources>mysources.cpp</sources>
+                        <win32-res>myresources.rc</win32-res>
+                        
+                        <sys-lib>mylib_which_requires_wx</sys-lib>
+                        <wx-lib>core</wx-lib>
+                        <wx-lib>base</wx-lib>
+                </exe>
+        </makefile>
+ 
+ 
+        
+        # ======================================================
+        # A basic "configure.ac" using a WXBASE-based bakefile
+        # NOTE: to be able to keep this sample in the wxbase.bkl
+        #       file, i.e. into an XML file, I had to change
+        #       all double-hyphens in '- -', i.e. with a space
+        #       between the two hyphens since XML does not allow
+        #       them inside a comment (since they are used as
+        #       comment delimiter !).
+        #       Thus, in order to use the configure.ac file which
+        #       follows, you need to change all '- -' into
+        #       two hyphens without a space inside...
+        # ======================================================
+        
+        AC_PREREQ(2.57)
+        AC_INIT([myprog], [1.2.3], [mymail@myserver.com])
+        
+        # This allows us to use Bakefile, recognizing the system type
+        # (and sets the AC_CANONICAL_BUILD, AC_CANONICAL_HOST and
+        # AC_CANONICAL_TARGET variables)
+        AC_CANONICAL_SYSTEM
+        
+        # This adds some standard wxWidgets options to the configure script
+        AM_OPTIONS_WXCONFIG
+        
+        # Check for wxWidgets
+        # ===================
+        
+     AM_PATH_WXCONFIG(2.6.0, wxWin=1, wxWin=0)
+     if test "$wxWin" != 1; then
+        AC_MSG_ERROR([
+           wxWidgets must be installed on your system
+           but wx-config script couldn't be found.
+        
+           Please check that wx-config is in path, the directory
+           where wxWidgets libraries are installed (returned by
+           'wx-config - -libs' command) is in LD_LIBRARY_PATH or
+           equivalent variable and wxWidgets version is 2.6.0 or above.
+        ])
+     else
+        # do not update CPPFLAGS nor CXXFLAGS otherwise we'll get the
+        # same settings repetead three times (since Makefile.in merges these
+        # two variables with $WX_CPPFLAGS automatically)
+        #CPPFLAGS="$CPPFLAGS"
+        CXXFLAGS="$CXXFLAGS"
+        CFLAGS="$CFLAGS $WX_CFLAGS_ONLY"
+        LDFLAGS="$LDFLAGS $WX_LIBS"
+     fi
+        
+     # Synch our WX_DEBUG,WX_UNICODE,WX_SHARED variables with wx ones
+     # ==============================================================
+     
+     # these var will be set to '0' when they are FALSE, '1' when they are TRUE
+        #
+        # IMPORTANT: remove the space between the two hyphens when creating your
+        #            configure.ac files from the following lines !
+        #
+     UNICODE_FLAG=$(test ! $($WX_CONFIG_WITH_ARGS - -unicode >/dev/null 2>&1))
+     DEBUG_FLAG=$(test ! $($WX_CONFIG_WITH_ARGS - -debug >/dev/null 2>&1))
+     SHARED_FLAG=$($WX_CONFIG_WITH_ARGS - -static >/dev/null 2>&1)
+     
+     AC_MSG_CHECKING([if wxWidgets was built with UNICODE enabled])
+     if test "$UNICODE_FLAG" != "0"; then
+        AC_MSG_RESULT([yes])
+        WX_UNICODE=1
+     else
+        AC_MSG_RESULT([no])
+        WX_UNICODE=0
+     fi
+     
+     
+     AC_MSG_CHECKING([if wxWidgets was built in DEBUG or RELEASE mode])
+     if test "$DEBUG_FLAG" != "0"; then
+        AC_MSG_RESULT([debug])
+        WX_DEBUG=1
+     else
+        AC_MSG_RESULT([release])
+        WX_DEBUG=0
+     fi
+     
+     AC_MSG_CHECKING([if wxWidgets was built in SHARED or STATIC mode])
+     if test "$SHARED_FLAG" != "0"; then
+        AC_MSG_RESULT([shared])
+        WX_SHARED=1
+     else
+        AC_MSG_RESULT([static])
+        WX_SHARED=0
+     fi
+        
+        # The final lines of the configure script
+        AC_BAKEFILE([m4_include(autoconf_inc.m4)]) 
+        AC_CONFIG_FILES([Makefile])
+        AC_OUTPUT
+ 
+ -->
+ 
+ 
+ 
+ <!-- makefile tag signifies the beginning of the bakefile           -->
+ <makefile>
+     <if cond="not isdefined('WXBASE_INC')">
+     <set var="WXBASE_INC">1</set>
+     
+     <requires version="0.1.5"/>
+ 
+     <!-- this is a temporary variable until there is non general    -->
+     <!-- function in bakefiles for returning native markup for      -->
+     <!-- reading envrionment variables                              -->
+     <set var="ENV_VAR">
+         <if cond="FORMAT=='watcom'">%</if>
+         <if cond="FORMAT!='watcom'"></if>
+     </set>
+     
+        <!-- these variables are used to make default values customizable
+             from an external bakefile without touching this one: if you
+             want a different default setting for one of the wxbase options,
+             you just should write:
+              <set var="WX_DEBUG_DEFAULT">0</set>
+          *before* including wxbase.bkl 
+     -->
+     <set var="WX_DIR_DEFAULT" overwrite="0">$(DOLLAR)($(ENV_VAR)WXWIN)</set>
+     <set var="WX_SHARED_DEFAULT" overwrite="0">1</set>
+     <set var="WX_UNICODE_DEFAULT" overwrite="0">1</set>
+     <set var="WX_MONOLITHIC_DEFAULT" overwrite="0">1</set>
+     <set var="WX_DEBUG_DEFAULT" overwrite="0">0</set>
+     <set var="WX_VERSION_DEFAULT" overwrite="0">28</set>
+ 
+        <!-- We won't use the WX_DEBUG option (which takes values 0/1);      -->
+        <!-- so we have to translate the WX_DEBUG_DEFAULT variable           -->
+        <!-- (which takes values 0/1) to values debug/release                -->
+        <set var="BUILD_DEFAULT">
+            <if cond="WX_DEBUG_DEFAULT=='0'">release</if>
+        <if cond="WX_DEBUG_DEFAULT=='1'">debug</if>
+        </set>
+     
+     
+ 
+     <!--                        OPTIONS                             -->
+     <!--                                                            -->
+     <!--    These are essentially the configurations you            -->
+     <!--    want in bakefile.                                       -->
+     <!--                                                            -->
+     <!--    In MSVC these are the different build                   -->
+     <!--    configurations you can have (in the build menu),        -->
+     <!--    and in autoconf is enabled with enable-xxx=xx.          -->
+     <!--    For other compilers a seperate configuration            -->
+     <!--    file is created (such as config.gcc on gcc)             -->
+     <!--    which has several options a user can modify.            -->
+     <!--                                                            -->
+     <!--    Note that the above only happens if an option           -->
+     <!--    is not constant, i.e. if it cannot be determined        -->
+     <!--    by bakefile itself.                                     -->
+ 
+     <!--    This is a standard option that determines               -->
+     <!--    whether the user wants to build this library as         -->
+     <!--    a dll or as a static library.                           -->
+     <option name="SHARED">
+         <values>0,1</values>
+         <values-description>,DLL</values-description>
+         <default-value>$(WX_SHARED_DEFAULT)</default-value>
+         <description>What type of library to build ?</description>
+     </option>
+ 
+     <!-- Configuration for building the project with                -->
+     <!-- unicode strings or not (unicode or ansi).                  -->
+     <option name="UNICODE">
+         <values>0,1</values>
+         <values-description>,Unicode</values-description>
+         <default-value>$(WX_UNICODE_DEFAULT)</default-value>        
+         <description>Should UNICODE be enabled ?</description>
+     </option>
+
+     <!-- Checking if use single dll or not                       -->
+     <option name="MONOLITHIC">
+         <values>0,1</values>
+         <values-description>,dll</values-description>
+         <default-value>$(WX_MONOLITHIC_DEFAULT)</default-value>        
+         <description>Using single dll ?</description>
+     </option>
+ 
+     <!-- There are several options that deal with build             -->
+     <!-- types. First, there's this one, BUILD.                     -->
+     <!--                                                            -->
+     <!-- BUILD determines whether or not we want to build           -->
+     <!-- in release or debug mode.  Note that in practice           -->
+     <!-- this means modifying the optimize tag, which by            -->
+     <!-- default is set to off.  In this case debug means           -->
+     <!-- off (no optimizations), and release means speed            -->
+     <!-- (fast with inlining).  There is also a size option         -->
+     <!-- that is not addressed in this example bakefile.            -->
+     <option name="BUILD">
+         <values>debug,release</values>
+         <values-description>Debug,Release</values-description>
+         <default-value>$(BUILD_DEFAULT)</default-value>
+         <description>Type of compiled binaries</description>
+     </option>
+     
+     <!-- The path to the wxWidgets main folder.                     -->
+     <!-- This option works exactly like wx.bkl's WX_DIR option.     -->
+     <option name="WX_DIR" category="path">
+         <default-value>$(WX_DIR_DEFAULT)</default-value>
+         <description>
+             The directory where wxWidgets library is installed
+         </description>
+     </option>
+     
+     <!-- Determines which version of wxWindows we want.             -->
+     <!-- This option has big effects on the WXLIBS tag              -->
+     <!-- (the wxWidgets library names are version-dependent).       -->
+     <!-- This option works exactly like wx.bkl's WX_VERSION option. -->    
+     <option name="WX_VERSION">
+         <default-value>$(WX_VERSION_DEFAULT)</default-value>
+         <description>The version of wxWidgets to use</description>
+     </option>
+     
+     
+     <!-- ============================================================== -->
+     <!--                           Autoconf                             -->
+     <!-- ============================================================== -->
+     
+     <if cond="FORMAT=='autoconf'">
+         <!-- Autoconf backend is simplicity itself thanks to wx-config...--> 
+         <option name="WX_CFLAGS"/>
+         <option name="WX_CXXFLAGS"/>
+         <option name="WX_CPPFLAGS"/>
+         <option name="WX_LIBS"/> 
+
+     </if>
+     
+     <!-- ============================================================== -->
+     <!--                   GNU makefiles for Unix                       -->
+     <!-- ============================================================== -->
+     <if cond="FORMAT=='gnu'">
+         <option name="WX_CONFIG">
+             <default-value>wx-config</default-value>
+             <description>Location and arguments of wx-config script</description>
+         </option>
+         <option name="WX_CFLAGS">
+             <default-value>`$(DOLLAR)(WX_CONFIG) --cflags`</default-value>
+             <description>C flags to use with wxWidgets code</description>
+         </option>
+         <option name="WX_CXXFLAGS">
+             <default-value>`$(DOLLAR)(WX_CONFIG) --cxxflags`</default-value>
+             <description>C++ flags to use with wxWidgets code</description>
+         </option>
+         <option name="WX_CPPFLAGS">
+             <default-value>`$(DOLLAR)(WX_CONFIG) --cppflags`</default-value>
+             <description>C preprocessor flags to use with wxWidgets code</description>
+         </option>
+         <option name="WX_LIBS">
+             <default-value>`$(DOLLAR)(WX_CONFIG) --libs`</default-value>
+             <description>wxWidgets libraries to link against</description>
+         </option>
+ 
+         <!-- we need this but the trick used in default-values above
+              prevents bakefile from detecting it: -->
+         <set var="FORMAT_OUTPUT_VARIABLES" append="1">WX_CONFIG</set>
+     </if>      
+     
+     
+ 
+ 
+     <!--                                                            -->
+     <!--                        VARIABLES                           -->
+     <!--                                                            -->
+     <!--    These are variables, the same way global                -->
+     <!--    variables are in c/c++.                                 -->
+     <!--                                                            -->
+     <!--    To "use" a variable you use the form $(VAR)             -->
+     <!--    where VAR is the name of the variable, and the          -->
+     <!--    contants of the variable will be expanded, much         -->
+     <!--    like a #define in c/c++.                                -->
+     <!--                                                            -->
+     <!--    Variables in bakefile have their hitches though.        -->
+     <!--                                                            -->
+     <!--    The real thing to watch out for is when using           -->
+     <!--    variables in if expressions - these variables           -->
+     <!--    must be a constant value, usually 1 or 0.  In           -->
+     <!--    practice this means declaring the variable              -->
+     <!--    with the cond statement INSIDE the tag, rather          -->
+     <!--    then having an if statement inside the variable.        -->
+   
+     <!--    A simple variable used to understand if we are          -->
+     <!--    creating a makefile for a Win32 target or a more        -->
+     <!--    generic linux/GNU-based system.                         -->
+     <set var="TARGETING_WIN32">
+         <if cond="FORMAT=='autoconf' or FORMAT=='gnu'">0</if>
+         <if cond="FORMAT!='autoconf' and FORMAT!='gnu'">1</if>
+     </set>
+     
+     <!--    A simple variable used to understand if we are          -->
+     <!--    creating a project file for a 'limited' IDE             -->
+     <!--    (Integrated Development Environment) which does         -->
+     <!--    not have full support for options (like msvc6).         -->
+     <set var="TARGETING_IDE">
+         <if cond="FORMAT=='msvc6prj' or FORMAT=='cbuilderx' or FORMAT=='msevc4prj'">0</if>
+         <if cond="FORMAT!='msvc6prj' and FORMAT!='cbuilderx' and FORMAT!='msevc4prj'">1</if>
+     </set>
+     
+     
+        <!-- wx_win32.bkl-like variables ***************************************************************** -->    
+ 
+     <!--    The unicode define we want.  By default bakefile        -->
+     <!--    makes variables an empty string, so if unicode          -->
+     <!--    is not defined $(UNICODE_DEFINE) would expand           -->
+     <!--    to nothing (literally).                                 -->
+     <set var="WXUNICODE_DEFINE">
+         <if cond="UNICODE=='1'">wxUSE_UNICODE</if>
+     </set>    
+
+     <set var="WXMONOLITHIC_DEFINE">
+         <if cond="MONOLITHIC=='1'">WXUSINGDLL</if>
+     </set>    
+	
+	
+     
+     <!--    The debug define we need with win32 compilers           -->    
+     <!--    (on Linux, the wx-config program is used).              -->    
+     <set var="WXDEBUG_DEFINE">        
+         <if cond="BUILD=='debug'">__WXDEBUG__</if>    
+     </set>
+ 
+     <!--    These are handy ways of dealing with the                -->
+     <!--    extensions in the library names of the                  --> 
+     <!--    wxWindows library.                                      -->
+     <set var="WXLIBPOSTFIX">
+         <if cond="BUILD=='debug' and UNICODE=='1'">ud</if>
+         <if cond="BUILD=='debug' and UNICODE=='0'">d</if>
+         <if cond="BUILD=='release' and UNICODE=='1'">u</if>
+     </set>
+     <set var="WX3RDPARTLIBPOSTFIX">
+         <if cond="BUILD=='debug'">d</if>
+     </set>
+ 
+     <set var="WXLIBPATH">
+         <if cond="SHARED=='0' and TARGETING_WIN32=='1'">$(DIRSEP)lib$(DIRSEP)$(COMPILER)_lib</if>
+         <if cond="SHARED=='1' and TARGETING_WIN32=='1'">$(DIRSEP)lib$(DIRSEP)$(COMPILER)_dll</if>
+     </set>
+
+ 
+     <set var="WXLIBINCLUDE">$(WXLIBPATH)$(DIRSEP)msw$(WXLIBPOSTFIX)</set>
+
+     <set var="WXFORDLL">
+         <if cond="MONOLITHIC=='1' and TARGETING_WIN32=='1'">wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)</if>
+     </set>
+     
+        <!-- END OF wx_win32.bkl-like variables ********************************************************** -->    
+        
+   
+     
+     <!--    Value we will use later on for the debug-info           -->
+     <!--    tag inside our templates.                               -->
+     <set var="DEBUGINFO">
+         <if cond="BUILD=='debug'">on</if>
+         <if cond="BUILD=='release'">off</if>
+     </set>
+ 
+     <!--    Value we will use later on for the debug-runtime        -->
+     <!--    tag inside our templates.                               -->
+     <set var="DEBUGRUNTIME">
+         <if cond="BUILD=='debug'">on</if>
+         <if cond="BUILD=='release'">off</if>
+     </set>
+ 
+     <!--    Value for optimize tag.                                 -->
+     <set var="OPTIMIZEFLAG">
+         <if cond="BUILD=='debug'">off</if>
+         <if cond="BUILD=='release'">speed</if>
+     </set>
+ 
+     <!-- Level of warnings.  Here we max it out in debug            -->
+     <!-- mode, and turn them off in release mode.                   -->
+     <set var="WARNINGS">
+         <if cond="BUILD=='debug'">max</if>
+         <if cond="BUILD=='release'">no</if>
+     </set>
+ 
+     <!-- Set WXCPPFLAGS as empty; maybe it will be filled later...  -->
+     <set var="ADDITIONAL_CPPFLAGS"></set>
+     <if cond="FORMAT=='mingw' or FORMAT=='autoconf'">
+ 
+         <!-- With GCC, settings warnings to MAX would force         -->
+         <!-- Bakefile to call GCC with "-W -Wall" which generates   -->
+         <!-- a *lot* of warnings about wxWidgets headers...         -->
+         <!-- this is why "-W -Wall" is here replaced by "-Wall".    -->
+         <set var="WARNINGS">default</set>
+         <set var="ADDITIONAL_CPPFLAGS">-Wall</set>
+     </if>
+ 
+ 
+ 
+ 
+     <!--                                                            -->
+     <!--                         NEW TAGS                           -->
+     <!--                                                            -->
+     <!--    The powerful <define-tag> tag allows the Bakefile       -->
+     <!--    user to extend it, working as a sort of macros.         -->
+     <!--                                                            -->
+ 
+     <!-- This defines a tag which includes headers on MSVC          -->
+     <!-- Note that $(value) is stuck in there by bakefile,          -->
+     <!-- and is the value between the beginning and end tag.        -->
+     <define-tag name="headers" rules="dll,lib,exe">
+         <if cond="FORMAT=='msvc6prj'">
+             <msvc-project-files>
+                 $(value)
+             </msvc-project-files>
+         </if>
+     </define-tag>
+ 
+        <!-- wx_win32.bkl-like tags ********************************************************************* -->
+ 
+     <!-- this tag is used to include wx libraries: -->
+     <define-tag name="wx-lib" rules="exe,dll,module">
+         <if cond="value=='base'">
+             <sys-lib>wxbase$(WX_VERSION)$(WXLIBPOSTFIX)</sys-lib>
+         </if>
+         <if cond="value in ['net','xml','odbc']">
+             <sys-lib>wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_$(value)</sys-lib>
+         </if>
+         <if cond="value not in ['base','net','xml']">
+             <sys-lib>wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)$(value)</sys-lib>
+         </if>
+     </define-tag>
+ 
+     <!-- just a placeholder to mark the place where <wx-lib> will be placed,
+          thanks to the order precedence declaration below it: -->
+     <define-tag name="__wx-libs-point" rules="exe,dll,module"/>
+     <tag-info name="wx-lib"
+               position="before:__wx-libs-point"/>
+     <tag-info name="__wx-syslibs"
+               position="after:__wx-libs-point"/>
+     
+     <!-- this ugly tag contains all sys-lib tags used by "wx" template,
+          in order to make sure they are not reorder when wx-lib is moved
+          after __wx-libs-point: -->
+     <define-tag name="__wx-syslibs" rules="exe,dll,module">
+         <!-- wx 3rd party libs, always use them: -->
+         <sys-lib>wxtiff$(WX3RDPARTLIBPOSTFIX)</sys-lib> 
+         <sys-lib>wxjpeg$(WX3RDPARTLIBPOSTFIX)</sys-lib> 
+         <sys-lib>wxpng$(WX3RDPARTLIBPOSTFIX)</sys-lib> 
+         <sys-lib>wxzlib$(WX3RDPARTLIBPOSTFIX)</sys-lib> 
+         <!-- For regex we won't use the WX3RDPARTLIBPOSTIX postfix: 
+              unliked tiff, jpeg, png, zlib, expat, when building
+              in Unicode mode, the "u" suffix is appended to regex -->
+         <sys-lib>wxregex$(WXLIBPOSTFIX)</sys-lib> 
+         <sys-lib>wxexpat$(WX3RDPARTLIBPOSTFIX)</sys-lib>
+    
+         <!-- link-in system libs that wx depends on: -->
+         <!-- If on borland, we don't need to do much            -->
+         <if cond="FORMAT=='borland'">
+             <sys-lib>ole2w32</sys-lib>
+         </if>
+ 
+         <!-- Non-borland, on the other hand...                  -->
+         <if cond="FORMAT!='borland'">
+             <sys-lib>kernel32</sys-lib>
+             <sys-lib>user32</sys-lib>
+             <sys-lib>gdi32</sys-lib>
+             <sys-lib>comdlg32</sys-lib>
+             <sys-lib>winspool</sys-lib>
+             <sys-lib>winmm</sys-lib>
+             <sys-lib>shell32</sys-lib>
+             <sys-lib>comctl32</sys-lib>
+             <sys-lib>ole32</sys-lib>
+             <sys-lib>oleaut32</sys-lib>
+             <sys-lib>uuid</sys-lib>
+             <sys-lib>rpcrt4</sys-lib>
+             <sys-lib>advapi32</sys-lib>
+             <sys-lib>wsock32</sys-lib>
+             <sys-lib>odbc32</sys-lib>
+         </if>
+ 
+         <!-- Libs common to both borland and MSVC               -->
+         <if cond="FORMAT=='msvc' or FORMAT=='msvc6prj' or FORMAT=='borland'">
+             <sys-lib>oleacc</sys-lib>
+         </if>
+     </define-tag>
+  
+        <!-- END OF wx_win32.bkl-like tags ************************************************************* -->
+  
+  
+  
+        <!-- wx_unix.bkl-like tags ********************************************************************* -->
+ 
+     <!-- not used together with wx-config: -->
+     <if cond="FORMAT=='autoconf' or FORMAT=='gnu'">
+            <define-tag name="wx-lib" rules="exe,dll,module"/>  
+        </if>
+        
+         <!-- END OF wx_unix.bkl-like tags ************************************************************* -->
+ 
+ 
+ 
+ 
+ 
+     <!--                                                            -->
+     <!--                        TEMPLATES                           -->
+     <!--                                                            -->
+     <!--    While not required, templates make your                 -->
+     <!--    bakefiles much more readable.  Templates, in            -->
+     <!--    essence, are abstract classes like c++.                 -->
+     <!--                                                            -->
+     <!--    Your build targets "inherit" the template,              -->
+     <!--    along with the info associated with the template        -->
+     
+     <!-- template for static wx libraries: -->
+     <if cond="TARGETING_WIN32=='1'">
+                <!-- wx_win32.bkl-like templates ***************************************************************** -->
+            <template id="wx-lib">
+                <if cond="FORMAT=='mingw'">                    
+                    <define>__GNUWIN32__</define>
+                    <ldflags>-mthreads</ldflags>
+                </if>
+        
+                <define>$(WXUNICODE_DEFINE)</define>
+                <define>$(WXMONOLITHIC_DEFINE)</define>
+                <define>$(WXDEBUG_DEFINE)</define>        
+                <define>__WXMSW__</define>
+        
+                <include>$(WX_DIR)$(WXLIBINCLUDE)</include>
+                <include>$(WX_DIR)/include</include>
+
+            </template>
+               
+            <!-- template for wx executables/dlls: -->
+            <template id="wx" template="wx-lib">
+                <lib-path>$(WX_DIR)$(WXLIBPATH)</lib-path>
+        <sys-lib>$(WXFORDLL)</sys-lib>
+                <!-- wx libs must come before 3rd party and sys libs, this is
+                     the place where the hack explained above is carried on: -->
+                <__wx-libs-point/>
+                <__wx-syslibs/>
+            </template>
+        <!-- END OF wx_win32.bkl-like templates ********************************************************** -->
+     </if>
+     
+     <if cond="TARGETING_WIN32=='0'">
+                <!-- wx_unix.bkl-like templates ****************************************************************** -->    
+            <template id="wx-lib">
+                        
+                <!-- configure.ac script must add to CXXFLAGS the WX_CXXFLAGS when checking for wx
+                     presence & usability; we must not do it here !
+                     <cxxflags>$(WX_CXXFLAGS)</cxxflags>
+                     <cflags>$(WX_CFLAGS)</cflags> -->
+            </template>
+        
+            <template id="wx" template="wx-lib">
+                <!-- configure.ac script must add to LIBS the WX_LIBS when checking for wx
+                     presence & usability; we must not do it here !
+                     <ldflags>$(WX_LIBS)</ldflags> -->
+            </template>
+        <!-- END OF wx_unix.bkl-like templates *********************************************************** -->      
+        </if>
+ 
+     
+   
+ 
+     <!--                                                            -->
+     <!--                wxWidgets LIBRARY/APP TEMPLATE              -->
+     <!--                                                            -->
+     <!--    The "base class" of all our build targets               -->
+     <!--    This links with the appropriate native                  -->
+     <!--    libraries required by the platform, the libaries        -->
+     <!--    we want for our stuff, and the wxWindows libs.          -->
+     <!--                                                            -->
+     <!--    HOW TO USE THIS TEMPLATE: see the beginning of this     -->
+     <!--    bakefile for an example: this template misses the       -->
+     <!--    <wxlibs/> and <syslibs/> tags which should be added     -->
+     <!--    in the right order in derived targets.                  -->
+     <template id="wxbase">
+         <cxxflags>$(ADDITIONAL_CPPFLAGS)</cxxflags>
+         <warnings>$(WARNINGS)</warnings>
+         <optimize>$(OPTIMIZEFLAG)</optimize>
+         <debug-info>$(DEBUGINFO)</debug-info>
+         <debug-runtime-libs>$(DEBUGRUNTIME)</debug-runtime-libs>
+     </template>
+ 
+     </if>
+ </makefile>

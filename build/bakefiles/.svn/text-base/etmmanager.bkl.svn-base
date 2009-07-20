@@ -1,0 +1,53 @@
+<?xml version="1.0" ?>
+        <makefile>
+	<using module="datafiles"/>
+                        <include file="wxbase.bkl"/>
+<set var="MYSQL_DIR_DEFAULT" overwrite="0">C:\Program Files\MySQL\MySQL Server 5.0</set>
+<set var="MYSQLPP_DIR_DEFAULT" overwrite="0">C:\mysql++</set>
+
+     <option name="MYSQL_DIR" category="path">
+         <default-value>$(MYSQL_DIR_DEFAULT)</default-value>
+         <description>
+             The directory where Mysql Server installed
+         </description>
+     </option>
+     <option name="MYSQLPP_DIR" category="path">
+         <default-value>$(MYSQLPP_DIR_DEFAULT)</default-value>
+         <description>
+             The directory where Mysql++ is installed
+         </description>
+     </option>
+
+
+                <set-srcdir>src</set-srcdir>                
+                <exe id="etmmanager" template="wx,wxbase">
+                        <app-type>gui</app-type>
+<if cond = "TARGETING_WIN32=='0'">
+<include>/usr/include/mysql</include>
+<include>/usr/local/include/mysql++</include>
+</if>
+
+<if cond = "TARGETING_WIN32=='1'">
+<include>"$(MYSQL_DIR)\include"</include>
+<include>"$(MYSQLPP_DIR)\include"</include>
+<lib-path>"$(MYSQLPP_DIR)"</lib-path>
+<lib-path>"$(MYSQL_DIR)\lib\opt"</lib-path>
+</if>
+                        <win32-res>res/resource.rc</win32-res>
+
+                        <sources>about.cpp backup.cpp db_set_panel.cpp edit_time.cpp etmmanagerApp.cpp etmmanagerMain.cpp prog_set_panel.cpp round.cpp settings.cpp workers.cpp wx_std.cpp</sources>
+
+
+                        <sys-lib>mysqlpp</sys-lib>
+				<sys-lib>mysqlclient</sys-lib>
+<install-to>$(BINDIR)</install-to>
+                </exe>
+
+<if cond = "TARGETING_WIN32=='0'">
+		<data-files>
+			<files>../share/etmmanager/table_schema.sql</files>
+			<install-to>$(DATADIR)/etmmanager</install-to>
+		</data-files>
+</if>
+
+        </makefile> 
