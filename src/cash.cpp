@@ -109,6 +109,9 @@ void cash::save_and_close(){
     amount.ToDouble(paid);
 
     if(*paid >= order_total){
+    wxString change_msg;
+    change_msg << _("Please give change in amount $ ") << (*paid - order_total);
+    wxMessageBox(change_msg);
     print = true;
     Show(0);
     }else{

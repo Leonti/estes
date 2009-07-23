@@ -13,14 +13,14 @@
 	<File name="src/add_zero.h" open="0" top="0" tabpos="8">
 		<Cursor position="134" topLine="1" />
 	</File>
-	<File name="src/backup.cpp" open="1" top="1" tabpos="3">
+	<File name="src/backup.cpp" open="1" top="0" tabpos="3">
 		<Cursor position="3693" topLine="0" />
 	</File>
 	<File name="src/backup.h" open="0" top="0" tabpos="5">
 		<Cursor position="120" topLine="0" />
 	</File>
-	<File name="src/cash.cpp" open="0" top="0" tabpos="0">
-		<Cursor position="3013" topLine="0" />
+	<File name="src/cash.cpp" open="1" top="1" tabpos="11">
+		<Cursor position="3959" topLine="102" />
 	</File>
 	<File name="src/cash.h" open="0" top="0" tabpos="0">
 		<Cursor position="193" topLine="0" />
@@ -31,8 +31,8 @@
 	<File name="src/display_settings.cpp" open="0" top="0" tabpos="5">
 		<Cursor position="3686" topLine="75" />
 	</File>
-	<File name="src/editmenu.cpp" open="0" top="0" tabpos="6">
-		<Cursor position="45552" topLine="1076" />
+	<File name="src/editmenu.cpp" open="1" top="0" tabpos="7">
+		<Cursor position="32572" topLine="676" />
 	</File>
 	<File name="src/payment.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="2390" topLine="0" />

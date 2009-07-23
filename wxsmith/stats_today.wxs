@@ -239,7 +239,7 @@
 									</object>
 									<object class="sizeritem">
 										<object class="wxStaticText" name="ID_STATICTEXT11" variable="StaticText9" member="yes">
-											<label>Charge:</label>
+											<label>Card:</label>
 											<font>
 												<size>13</size>
 												<style>normal</style>
@@ -410,7 +410,7 @@
 									</object>
 									<object class="sizeritem">
 										<object class="wxStaticText" name="ID_STATICTEXT24" variable="StaticText15" member="yes">
-											<label>Change:</label>
+											<label>Card:</label>
 											<font>
 												<size>13</size>
 												<style>normal</style>

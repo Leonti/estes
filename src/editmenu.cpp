@@ -161,7 +161,7 @@ editmenu::editmenu(wxWindow* parent,wxWindowID id)
     delete_part_button->Disable();
     FlexGridSizer10->Add(delete_part_button, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5);
     FlexGridSizer12 = new wxFlexGridSizer(0, 2, 0, 0);
-    StaticText4 = new wxStaticText(this, ID_STATICTEXT4, _("Price:"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT4"));
+    StaticText4 = new wxStaticText(this, ID_STATICTEXT4, _("Base price:"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT4"));
     FlexGridSizer12->Add(StaticText4, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
     price_textctrl = new wxTextCtrl(this, ID_TEXTCTRL2, wxEmptyString, wxDefaultPosition, wxSize(57,26), wxTE_PROCESS_ENTER, wxDefaultValidator, _T("ID_TEXTCTRL2"));
     FlexGridSizer12->Add(price_textctrl, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
@@ -684,6 +684,7 @@ void editmenu::Onadd_menu_buttonClick(wxCommandEvent& event)
         }
         if (exist == 0)
         {
+            if(taxes_array.GetCount() != 0){ //checking for taxes
 int kitchen = 1;
 if(!kitchen_by_default->GetValue()) kitchen = 0;
 
@@ -693,6 +694,9 @@ if(!kitchen_by_default->GetValue()) kitchen = 0;
 
             refresh_menu();
             menu_textctrl->Clear();
+            }else{
+wxMessageBox(_("Please create tax group first!"));
+            }
         }
 
 

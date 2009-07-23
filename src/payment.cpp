@@ -21,7 +21,7 @@ payment::payment(wxWindow* parent,wxWindowID id,const wxPoint& pos,const wxSize&
 {
 	//(*Initialize(payment)
 	wxBoxSizer* BoxSizer1;
-
+	
 	Create(parent, id, _("Please select payment type."), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("id"));
 	SetClientSize(wxDefaultSize);
 	Move(wxDefaultPosition);
@@ -39,7 +39,7 @@ payment::payment(wxWindow* parent,wxWindowID id,const wxPoint& pos,const wxSize&
 	SetSizer(FlexGridSizer1);
 	FlexGridSizer1->Fit(this);
 	FlexGridSizer1->SetSizeHints(this);
-
+	
 	Connect(ID_BUTTON1,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&payment::OnButton1Click);
 	Connect(ID_BUTTON2,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&payment::OnButton2Click);
 	//*)

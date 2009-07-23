@@ -606,7 +606,7 @@ if(s.Mid(0,2) == _T("r:")){
 wxMessageBox(_T("Order number ") + s.Mid(2, s.Length()) + _T(" is ready!"));
     }else
     if(s.Mid(0,2) == _T("m:")){
-    TextCtrl4 -> AppendText (s.Mid(2, s.Length()) + _T("\n"));
+    TextCtrl4 -> AppendText (_("Kitchen: ") + s.Mid(2, s.Length()) + _T("\n"));
         }
 
     }
@@ -1391,7 +1391,7 @@ void restaurant_posFrame::OnButton6Click(wxCommandEvent& event)
     if (Socketserver1->IsConnected()){
     TextCtrl5 -> Clear();
     sendMessage(_T("m:") + message);
-    TextCtrl4 -> AppendText(message + _T("\n"));
+    TextCtrl4 -> AppendText(_("POS: ") + message + _T("\n"));
     }else{
     wxMessageBox(_T("Kitchen computer is not connected!\n Message was not sent."));
         }

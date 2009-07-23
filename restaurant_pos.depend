@@ -4043,3 +4043,386 @@
 1242922178 source:/home/leonti/usa/restaurant_pos/src/wx_std.cpp
 	"wx_std.h"
 
+1239838567 source:/home/leonti/usa/estes/src/add_item.cpp
+	"add_item.h"
+	<wx/arrimpl.cpp>
+	<wx/string.h>
+	<wx/intl.h>
+	<wx/msgdlg.h>
+	"wx_std.h"
+
+1239838529 /home/leonti/usa/estes/src/add_item.h
+	<wx/frame.h>
+	<wx/button.h>
+	<mysql++.h>
+	<string>
+	<iostream>
+	<wx/statbox.h>
+	<wx/sizer.h>
+	<wx/stattext.h>
+	"dish_props.h"
+	<wx/dynarray.h>
+	<wx/listctrl.h>
+	"add_zero.h"
+
+1209835801 /home/leonti/usa/estes/src/dish_props.h
+	<wx/spinctrl.h>
+	<wx/dialog.h>
+	<wx/sizer.h>
+	<wx/button.h>
+	<wx/stattext.h>
+	<wx/textctrl.h>
+	<wx/checkbox.h>
+	<wx/radiobox.h>
+	<wx/button.h>
+	<wx/list.h>
+	<mysql++.h>
+	<string>
+	<iostream>
+	<wx/dynarray.h>
+
+1242829371 /home/leonti/usa/estes/src/add_zero.h
+	<wx/msgdlg.h>
+	<wx/string.h>
+	<wx/datetime.h>
+	<mysql++.h>
+	<string>
+	<wx/arrstr.h>
+	<iostream>
+	"wx_std.h"
+
+1242953281 /home/leonti/usa/estes/src/wx_std.h
+	<string>
+	<wx/string.h>
+
+1242953302 source:/home/leonti/usa/estes/src/add_zero.cpp
+	"add_zero.h"
+
+1243019625 source:/home/leonti/usa/estes/src/backup.cpp
+	"backup.h"
+	"wx_std.h"
+
+1242863885 /home/leonti/usa/estes/src/backup.h
+	<wx/utils.h>
+	<wx/string.h>
+	<wx/ffile.h>
+	<mysql++.h>
+	<wx/regex.h>
+	<wx/tokenzr.h>
+	<wx/msgdlg.h>
+
+1248231756 source:/home/leonti/usa/estes/src/cash.cpp
+	"cash.h"
+	"add_zero.h"
+	<wx/string.h>
+	<wx/intl.h>
+	<wx/font.h>
+	<wx/msgdlg.h>
+
+1242850392 /home/leonti/usa/estes/src/cash.h
+	<wx/dialog.h>
+	<wx/sizer.h>
+	<wx/button.h>
+	<wx/stattext.h>
+	<wx/textctrl.h>
+	"add_zero.h"
+
+1208613266 source:/home/leonti/usa/estes/src/db_set_panel.cpp
+	"db_set_panel.h"
+	<wx/string.h>
+	<wx/intl.h>
+
+1221491617 /home/leonti/usa/estes/src/db_set_panel.h
+	<wx/checkbox.h>
+	<wx/sizer.h>
+	<wx/panel.h>
+	<wx/stattext.h>
+	<wx/textctrl.h>
+	<wx/msgdlg.h>
+	<wx/config.h>
+	<string>
+	<mysql++.h>
+	<iostream>
+	"wx_std.h"
+	"backup.h"
+
+1242829371 source:/home/leonti/usa/estes/src/dish_props.cpp
+	"dish_props.h"
+	<wx/string.h>
+	<wx/intl.h>
+	<wx/font.h>
+	"wx_std.h"
+	<wx/msgdlg.h>
+	<wx/arrimpl.cpp>
+
+1237065491 source:/home/leonti/usa/estes/src/display_settings.cpp
+	"display_settings.h"
+	<wx/string.h>
+	<wx/intl.h>
+	<wx/msgdlg.h>
+
+1206042071 /home/leonti/usa/estes/src/display_settings.h
+	<wx/dialog.h>
+	<wx/sizer.h>
+	<wx/button.h>
+	<wx/listbox.h>
+	<mysql++.h>
+	<string>
+	<iostream>
+	"wx_std.h"
+
+1248231307 source:/home/leonti/usa/estes/src/payment.cpp
+	"payment.h"
+	<wx/string.h>
+	<wx/intl.h>
+	<wx/font.h>
+
+1242850879 /home/leonti/usa/estes/src/payment.h
+	<wx/dialog.h>
+	<wx/sizer.h>
+	<wx/button.h>
+	<wx/stattext.h>
+	<wx/msgdlg.h>
+	"cash.h"
+	"add_zero.h"
+
+1242858022 source:/home/leonti/usa/estes/src/perif.cpp
+	"perif.h"
+	<wx/file.h>
+	<wx/filename.h>
+	<wx/platinfo.h>
+	<wx/msgdlg.h>
+
+1242848033 /home/leonti/usa/estes/src/perif.h
+	<wx/string.h>
+	<wx/msgdlg.h>
+	<wx/html/htmprint.h>
+
+1242944037 source:/home/leonti/usa/estes/src/perif_set_panel.cpp
+	"perif_set_panel.h"
+	<wx/string.h>
+	<wx/intl.h>
+	<wx/font.h>
+	<wx/msgdlg.h>
+
+1242943995 /home/leonti/usa/estes/src/perif_set_panel.h
+	<wx/spinctrl.h>
+	<wx/checkbox.h>
+	<wx/sizer.h>
+	<wx/radiobut.h>
+	<wx/panel.h>
+	<wx/stattext.h>
+	<wx/textctrl.h>
+	<wx/printdlg.h>
+	"wx/print.h"
+	"prog_set_panel.h"
+
+1242760561 /home/leonti/usa/estes/src/prog_set_panel.h
+	<wx/checkbox.h>
+	<wx/sizer.h>
+	<wx/panel.h>
+	<wx/stattext.h>
+	<wx/choice.h>
+	<wx/config.h>
+
+1237065491 source:/home/leonti/usa/estes/src/product_stats.cpp
+	"product_stats.h"
+	<wx/settings.h>
+	<wx/string.h>
+	<wx/intl.h>
+	<wx/font.h>
+	<wx/msgdlg.h>
+
+1208977745 /home/leonti/usa/estes/src/product_stats.h
+	<wx/dialog.h>
+	<wx/sizer.h>
+	<wx/datectrl.h>
+	<wx/button.h>
+	<wx/dateevt.h>
+	<wx/stattext.h>
+	<wx/textctrl.h>
+	<wx/choice.h>
+	<mysql++.h>
+	<string>
+	<iostream>
+	"wx_std.h"
+	"add_zero.h"
+
+1242944166 source:/home/leonti/usa/estes/src/prog_set_panel.cpp
+	"prog_set_panel.h"
+	<wx/string.h>
+	<wx/intl.h>
+	<wx/font.h>
+
+1201375114 source:/home/leonti/usa/estes/src/restaurant_posApp.cpp
+	"restaurant_posApp.h"
+	"restaurant_posMain.h"
+	<wx/image.h>
+
+1201375114 /home/leonti/usa/estes/src/restaurant_posApp.h
+	<wx/app.h>
+
+1242846581 /home/leonti/usa/estes/src/restaurant_posMain.h
+	<wx/spinctrl.h>
+	<wx/checkbox.h>
+	<wx/sizer.h>
+	<wx/listctrl.h>
+	<wx/button.h>
+	<wx/menu.h>
+	<wx/statusbr.h>
+	<wx/frame.h>
+	<wx/stattext.h>
+	<wx/textctrl.h>
+	<wx/choice.h>
+	<wx/listbox.h>
+	<string>
+	<mysql++.h>
+	<iostream>
+	<wx/config.h>
+	<wx/dynarray.h>
+	"add_item.h"
+	"settings.h"
+	"payment.h"
+	"waiter_choose.h"
+	"display_settings.h"
+	<wx/filedlg.h>
+	"stats_today.h"
+	"perif.h"
+	<wx/socket.h>
+
+1240515072 /home/leonti/usa/estes/src/settings.h
+	<wx/dialog.h>
+	<wx/sizer.h>
+	<wx/notebook.h>
+	<wx/button.h>
+	<wx/statline.h>
+	"db_set_panel.h"
+	"prog_set_panel.h"
+	"perif_set_panel.h"
+	"restaurant_posMain.h"
+	<wx/config.h>
+	<wx/dialog.h>
+	<mysql++.h>
+
+1206025745 /home/leonti/usa/estes/src/waiter_choose.h
+	<wx/dialog.h>
+	<wx/sizer.h>
+	<wx/button.h>
+	<wx/listbox.h>
+	<mysql++.h>
+	<string>
+	<iostream>
+	"wx_std.h"
+
+1209830207 /home/leonti/usa/estes/src/stats_today.h
+	<wx/dialog.h>
+	<wx/sizer.h>
+	<wx/datectrl.h>
+	<wx/button.h>
+	<wx/dateevt.h>
+	<wx/stattext.h>
+	<wx/textctrl.h>
+	<wx/listbox.h>
+	<mysql++.h>
+	<string>
+	<iostream>
+	"wx_std.h"
+	"add_zero.h"
+
+1242949580 source:/home/leonti/usa/estes/src/restaurant_posMain.cpp
+	"restaurant_posMain.h"
+	"add_item.h"
+	"wx_std.h"
+	<wx/msgdlg.h>
+	"backup.h"
+	<time.h>
+	<datetime.h>
+	<wx/arrimpl.cpp>
+	<wx/string.h>
+	<wx/intl.h>
+	<wx/font.h>
+	"editmenu.h"
+	"taxes.h"
+	"workers.h"
+	"product_stats.h"
+
+1209833494 /home/leonti/usa/estes/src/editmenu.h
+	<wx/checkbox.h>
+	<wx/dialog.h>
+	<wx/sizer.h>
+	<wx/button.h>
+	<wx/stattext.h>
+	<wx/textctrl.h>
+	<wx/choice.h>
+	<wx/listbox.h>
+	<mysql++.h>
+	<string>
+	<iostream>
+	<wx/dynarray.h>
+	"taxes.h"
+
+1209823203 /home/leonti/usa/estes/src/taxes.h
+	<wx/dialog.h>
+	<wx/sizer.h>
+	<wx/button.h>
+	<wx/stattext.h>
+	<wx/textctrl.h>
+	<wx/listbox.h>
+	<mysql++.h>
+	<string>
+	<iostream>
+	"wx_std.h"
+
+1209824262 /home/leonti/usa/estes/src/workers.h
+	<wx/dialog.h>
+	<wx/sizer.h>
+	<wx/button.h>
+	<wx/stattext.h>
+	<wx/textctrl.h>
+	<wx/listbox.h>
+	<mysql++.h>
+	<string>
+	<iostream>
+	"wx_std.h"
+
+1240517070 source:/home/leonti/usa/estes/src/settings.cpp
+	"settings.h"
+	<wx/string.h>
+	<wx/intl.h>
+
+1248231137 source:/home/leonti/usa/estes/src/stats_today.cpp
+	"stats_today.h"
+	<wx/settings.h>
+	<wx/string.h>
+	<wx/intl.h>
+	<wx/font.h>
+	<wx/msgdlg.h>
+
+1237065492 source:/home/leonti/usa/estes/src/taxes.cpp
+	"taxes.h"
+	<wx/string.h>
+	<wx/intl.h>
+	<wx/msgdlg.h>
+
+1237065492 source:/home/leonti/usa/estes/src/waiter_choose.cpp
+	"waiter_choose.h"
+	<wx/string.h>
+	<wx/intl.h>
+
+1237065492 source:/home/leonti/usa/estes/src/workers.cpp
+	"workers.h"
+	<wx/string.h>
+	<wx/intl.h>
+	<wx/msgdlg.h>
+
+1242922178 source:/home/leonti/usa/estes/src/wx_std.cpp
+	"wx_std.h"
+
+1248230654 source:/home/leonti/usa/estes/src/editmenu.cpp
+	"editmenu.h"
+	"wx_std.h"
+	<wx/msgdlg.h>
+	<wx/string.h>
+	<wx/intl.h>
+	<wx/arrimpl.cpp>
+

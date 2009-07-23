@@ -58,7 +58,7 @@ stats_today::stats_today(wxWindow* parent,wxWindowID id,const wxPoint& pos,const
 	wxFlexGridSizer* FlexGridSizer3;
 	wxBoxSizer* BoxSizer1;
 	wxFlexGridSizer* FlexGridSizer5;
-
+	
 	Create(parent, wxID_ANY, _("Sales statistics, account information"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("wxID_ANY"));
 	FlexGridSizer1 = new wxFlexGridSizer(3, 1, 0, 0);
 	StaticText1 = new wxStaticText(this, ID_STATICTEXT1, _("Please select dates to view sales statistics:"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT1"));
@@ -123,7 +123,7 @@ stats_today::stats_today(wxWindow* parent,wxWindowID id,const wxPoint& pos,const
 	wxFont total_cashFont(13,wxSWISS,wxFONTSTYLE_NORMAL,wxNORMAL,false,_T("Sans"),wxFONTENCODING_DEFAULT);
 	total_cash->SetFont(total_cashFont);
 	FlexGridSizer5->Add(total_cash, 0, wxALIGN_LEFT|wxALIGN_TOP, 0);
-	StaticText9 = new wxStaticText(this, ID_STATICTEXT11, _("Charge:"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT11"));
+	StaticText9 = new wxStaticText(this, ID_STATICTEXT11, _("Card:"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT11"));
 	wxFont StaticText9Font(13,wxSWISS,wxFONTSTYLE_NORMAL,wxNORMAL,false,_T("Sans"),wxFONTENCODING_DEFAULT);
 	StaticText9->SetFont(StaticText9Font);
 	FlexGridSizer5->Add(StaticText9, 0, wxALIGN_LEFT|wxALIGN_TOP, 0);
@@ -171,7 +171,7 @@ stats_today::stats_today(wxWindow* parent,wxWindowID id,const wxPoint& pos,const
 	wxFont total_cash_periodFont(13,wxSWISS,wxFONTSTYLE_NORMAL,wxNORMAL,false,_T("Sans"),wxFONTENCODING_DEFAULT);
 	total_cash_period->SetFont(total_cash_periodFont);
 	FlexGridSizer6->Add(total_cash_period, 0, wxALIGN_LEFT|wxALIGN_TOP, 0);
-	StaticText15 = new wxStaticText(this, ID_STATICTEXT24, _("Change:"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT24"));
+	StaticText15 = new wxStaticText(this, ID_STATICTEXT24, _("Card:"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT24"));
 	wxFont StaticText15Font(13,wxSWISS,wxFONTSTYLE_NORMAL,wxNORMAL,false,_T("Sans"),wxFONTENCODING_DEFAULT);
 	StaticText15->SetFont(StaticText15Font);
 	FlexGridSizer6->Add(StaticText15, 0, wxALIGN_LEFT|wxALIGN_TOP, 0);
@@ -187,7 +187,7 @@ stats_today::stats_today(wxWindow* parent,wxWindowID id,const wxPoint& pos,const
 	SetSizer(FlexGridSizer1);
 	FlexGridSizer1->Fit(this);
 	FlexGridSizer1->SetSizeHints(this);
-
+	
 	Connect(ID_DATEPICKERCTRL1,wxEVT_DATE_CHANGED,(wxObjectEventFunction)&stats_today::OnDatePickerCtrl1Changed);
 	Connect(ID_DATEPICKERCTRL2,wxEVT_DATE_CHANGED,(wxObjectEventFunction)&stats_today::OnDatePickerCtrl2Changed);
 	Connect(ID_LISTBOX1,wxEVT_COMMAND_LISTBOX_SELECTED,(wxObjectEventFunction)&stats_today::OnListBox1Select);
