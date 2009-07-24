@@ -238,6 +238,7 @@ class restaurant_posFrame: public wxFrame
         void readFromKitchen(wxSocketBase *sock);
         void readSet(void);
         void sendMessage(wxString);
+        void mark_ready(int);
         bool server_started;
         DECLARE_EVENT_TABLE()
 };

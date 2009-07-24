@@ -6,6 +6,7 @@
 #include <wx/tokenzr.h>
 
 #include <wx/msgdlg.h>
+#include <wx/stdpaths.h>
 
 long make_dump(const wxString& host,const  wxString& user, const wxString& password, const wxString& db_name, const wxString& filename);
 long restore_table(const wxString& host,const  wxString& user, const wxString& password, const wxString& db_name, const wxString& filename);

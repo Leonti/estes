@@ -149,7 +149,7 @@ restaurant_posFrame::restaurant_posFrame(wxWindow* parent,wxWindowID id)
     wxMenu* Menu2;
     wxFlexGridSizer* FlexGridSizer5;
     wxStaticBoxSizer* StaticBoxSizer1;
-
+    
     Create(parent, wxID_ANY, _("Estes - Open Source Restaurant POS"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
     FlexGridSizer1 = new wxFlexGridSizer(0, 3, 0, 0);
     FlexGridSizer2 = new wxFlexGridSizer(0, 3, 0, 0);
@@ -318,7 +318,7 @@ restaurant_posFrame::restaurant_posFrame(wxWindow* parent,wxWindowID id)
     SetStatusBar(StatusBar1);
     FlexGridSizer1->Fit(this);
     FlexGridSizer1->SetSizeHints(this);
-
+    
     Connect(ID_LISTCTRL1,wxEVT_COMMAND_LIST_ITEM_SELECTED,(wxObjectEventFunction)&restaurant_posFrame::OncomprasItemSelect);
     Connect(ID_LISTCTRL1,wxEVT_COMMAND_LIST_INSERT_ITEM,(wxObjectEventFunction)&restaurant_posFrame::OncomprasInsertItem);
     Connect(ID_BUTTON5,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&restaurant_posFrame::OnButton5Click);
@@ -603,7 +603,11 @@ void restaurant_posFrame::readFromKitchen(wxSocketBase *sock){
 //if buf == r:id it means that order 'id' is ready we can update the info
 if(s.Mid(0,2) == _T("r:")){
     //here do something useful :)
-wxMessageBox(_T("Order number ") + s.Mid(2, s.Length()) + _T(" is ready!"));
+    wxString ord_number = s.Mid(2, s.Length());
+    long ord_n;
+    ord_number.ToLong(&ord_n);
+    mark_ready(ord_n);
+wxMessageBox(_T("Order number ") + ord_number + _T(" is ready!"));
     }else
     if(s.Mid(0,2) == _T("m:")){
     TextCtrl4 -> AppendText (_("Kitchen: ") + s.Mid(2, s.Length()) + _T("\n"));
@@ -611,6 +615,11 @@ wxMessageBox(_T("Order number ") + s.Mid(2, s.Length()) + _T(" is ready!"));
 
     }
 
+void restaurant_posFrame::mark_ready(int ord_number){
+wxString msg;
+msg << ord_number;
+wxMessageBox(msg);
+}
 
 void restaurant_posFrame::fill_pending(){
             mysqlpp::Query query = conn->query();
@@ -933,7 +942,10 @@ void restaurant_posFrame::OnMenu6Selected(wxCommandEvent& event)
     if(dbase_connected){
 
  //   int result = restore_table(host, user, pass, dbase, _("table_schema.sql"));
-   int result = restoreFromDump(conn, _("table_schema.sql"));
+         wxStandardPaths path;
+wxFileName tableName;
+tableName.Assign(path.GetDataDir(),_T("table_schema.sql"));
+   int result = restoreFromDump(conn, tableName.GetFullPath());
 
 if(result == 0) wxMessageBox(_("There was a problem. Database structure is not installed"));
 
