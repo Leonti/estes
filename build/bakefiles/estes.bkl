@@ -45,6 +45,7 @@ taxes.cpp
 wx_std.cpp
 product_stats.cpp
 prog_set_panel.cpp
+perif_set_panel.cpp
 add_item.cpp
 payment.cpp
 perif.cpp
@@ -78,6 +79,19 @@ locale/ru/LC_MESSAGES/estes.mo
 </files>
 			<install-to>$(DATADIR)</install-to>
 		</data-files-tree>
+<data-files>
+<files>
+estes.desktop
+</files>
+<install-to>$(DATADIR)/applications</install-to>
+</data-files>
+
+<data-files>
+<files>
+estes.png
+</files>
+<install-to>$(DATADIR)/pixmaps</install-to>
+</data-files>
 </if>
 
         </makefile> 

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+GenericName=Estes - Open Source POS
+Name=Estes
+Exec=estes
+Icon=estes
+Terminal=false
+Type=Application
+Categories=Utility;Applications;
+ 
