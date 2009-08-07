@@ -1,0 +1,983 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#: add_zero.cpp:216 backup.cpp:98 cash.cpp:83 restaurant_posMain.cpp:912
+#: restaurant_posMain.cpp:928 restaurant_posMain.cpp:1283
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-08-07 12:36-0600\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: add_item.cpp:28
+msgid "Add item"
+msgstr ""
+
+#: add_item.cpp:53
+msgid "Adding of item cancelled :("
+msgstr ""
+
+#: add_item.cpp:102
+msgid "Please choose a product"
+msgstr ""
+
+#: add_item.cpp:108 cash.cpp:42 dish_props.cpp:48 display_settings.cpp:42
+#: waiter_choose.cpp:27
+msgid "OK"
+msgstr ""
+
+#: add_item.cpp:150
+msgid "button_id_"
+msgstr ""
+
+#: add_zero.cpp:215 add_zero.cpp:299
+msgid "<br>"
+msgstr ""
+
+#: add_zero.cpp:215 perif.cpp:16 perif.cpp:51
+msgid " "
+msgstr ""
+
+#: add_zero.cpp:217
+msgid "Order comment: <br><i>"
+msgstr ""
+
+#: add_zero.cpp:217
+msgid "</i><br>"
+msgstr ""
+
+#: add_zero.cpp:276
+msgid "<b>NO</b> "
+msgstr ""
+
+#: backup.cpp:17
+msgid "w"
+msgstr ""
+
+#: backup.cpp:21
+msgid "SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO\";\n"
+msgstr ""
+
+#: backup.cpp:36
+msgid "DROP TABLE IF EXISTS `"
+msgstr ""
+
+#: backup.cpp:36
+msgid "`;\n"
+msgstr ""
+
+#: backup.cpp:37 backup.cpp:70
+msgid ";\n"
+msgstr ""
+
+#: backup.cpp:42
+msgid "INSERT INTO `"
+msgstr ""
+
+#: backup.cpp:42
+msgid "` ("
+msgstr ""
+
+#: backup.cpp:45
+msgid "`"
+msgstr ""
+
+#: backup.cpp:47 backup.cpp:61
+msgid ", "
+msgstr ""
+
+#: backup.cpp:49
+msgid ") VALUES\n"
+msgstr ""
+
+#: backup.cpp:52
+msgid "("
+msgstr ""
+
+#: backup.cpp:56
+msgid "'"
+msgstr ""
+
+#: backup.cpp:65
+msgid ")"
+msgstr ""
+
+#: backup.cpp:67
+msgid ",\n"
+msgstr ""
+
+#: backup.cpp:94
+msgid "\\x22\\x27[^\\x22\\x27]*\\x22\\x27|/\\*.*?\\*/|(\\#|--)[^\\x22\\x27]*?$"
+msgstr ""
+
+#: backup.cpp:102
+msgid "(?m);\\s*$"
+msgstr ""
+
+#: backup.cpp:103 backup.cpp:107
+msgid "^"
+msgstr ""
+
+#: cash.cpp:32 dish_props.cpp:38 payment.cpp:29
+msgid "Label"
+msgstr ""
+
+#: cash.cpp:36
+msgid "Please enter the amount of cash"
+msgstr ""
+
+#: cash.cpp:39
+msgid "Text"
+msgstr ""
+
+#: cash.cpp:44 display_settings.cpp:40 settings.cpp:35
+msgid "Cancel"
+msgstr ""
+
+#: cash.cpp:74
+msgid " $"
+msgstr ""
+
+#: cash.cpp:83 cash.cpp:85 cash.cpp:87
+msgid "."
+msgstr ""
+
+#: cash.cpp:113
+msgid "Please give change in amount $ "
+msgstr ""
+
+#: cash.cpp:119
+msgid "Given amount can't be less than amount to pay "
+msgstr ""
+
+#: db_set_panel.cpp:35
+msgid "Please edit this setting before connecting to the database."
+msgstr ""
+
+#: db_set_panel.cpp:38
+msgid "Host"
+msgstr ""
+
+#: db_set_panel.cpp:40
+msgid "localhost"
+msgstr ""
+
+#: db_set_panel.cpp:42
+msgid "User"
+msgstr ""
+
+#: db_set_panel.cpp:44
+msgid "root"
+msgstr ""
+
+#: db_set_panel.cpp:46
+msgid "Password"
+msgstr ""
+
+#: db_set_panel.cpp:50
+msgid "Database name"
+msgstr ""
+
+#: db_set_panel.cpp:52 restaurant_posMain.cpp:407
+msgid "restaurant_pos"
+msgstr ""
+
+#: db_set_panel.cpp:55
+msgid "Create database"
+msgstr ""
+
+#: db_set_panel.cpp:58
+msgid "Show this dialog on next startup"
+msgstr ""
+
+#: db_set_panel.cpp:75 db_set_panel.cpp:126 restaurant_posMain.cpp:667
+#: restaurant_posMain.cpp:894
+msgid "/mysql/host"
+msgstr ""
+
+#: db_set_panel.cpp:76 db_set_panel.cpp:129 restaurant_posMain.cpp:668
+#: restaurant_posMain.cpp:895
+msgid "/mysql/user"
+msgstr ""
+
+#: db_set_panel.cpp:77 db_set_panel.cpp:132 restaurant_posMain.cpp:669
+#: restaurant_posMain.cpp:896
+msgid "/mysql/pass"
+msgstr ""
+
+#: db_set_panel.cpp:78 db_set_panel.cpp:135 restaurant_posMain.cpp:670
+#: restaurant_posMain.cpp:897
+msgid "/mysql/dbase"
+msgstr ""
+
+#: db_set_panel.cpp:79 restaurant_posMain.cpp:418 settings.cpp:62
+msgid "/program/run"
+msgstr ""
+
+#: db_set_panel.cpp:79 db_set_panel.cpp:82 db_set_panel.cpp:89
+#: db_set_panel.cpp:137 db_set_panel.cpp:141 perif_set_panel.cpp:179
+#: perif_set_panel.cpp:189 perif_set_panel.cpp:200 perif_set_panel.cpp:210
+#: prog_set_panel.cpp:131 prog_set_panel.cpp:140 restaurant_posMain.cpp:418
+#: restaurant_posMain.cpp:437 restaurant_posMain.cpp:448
+#: restaurant_posMain.cpp:455 restaurant_posMain.cpp:463
+#: restaurant_posMain.cpp:470 settings.cpp:62
+msgid "1"
+msgstr ""
+
+#: db_set_panel.cpp:82 db_set_panel.cpp:84 db_set_panel.cpp:137
+#: restaurant_posMain.cpp:418
+msgid "/program/run_again"
+msgstr ""
+
+#: db_set_panel.cpp:84 editmenu.cpp:220 perif_set_panel.cpp:169
+#: perif_set_panel.cpp:194 perif_set_panel.cpp:205 perif_set_panel.cpp:215
+#: prog_set_panel.cpp:134 stats_today.cpp:98 stats_today.cpp:106
+#: stats_today.cpp:114 stats_today.cpp:122 stats_today.cpp:130
+#: stats_today.cpp:146 stats_today.cpp:154 stats_today.cpp:162
+#: stats_today.cpp:170 stats_today.cpp:178
+msgid "0"
+msgstr ""
+
+#: db_set_panel.cpp:89 db_set_panel.cpp:141
+msgid "/program/db_created"
+msgstr ""
+
+#: db_set_panel.cpp:92
+msgid "Connectimsia!"
+msgstr ""
+
+#: db_set_panel.cpp:109
+msgid "table_schema.sql"
+msgstr ""
+
+#: db_set_panel.cpp:111
+msgid "Database was created, but the structure was not restored."
+msgstr ""
+
+#: dish_props.cpp:43
+msgid "Quantity:"
+msgstr ""
+
+#: dish_props.cpp:52
+msgid "Comments:"
+msgstr ""
+
+#: dish_props.cpp:140
+msgid "choose"
+msgstr ""
+
+#: dish_props.cpp:191 dish_props.cpp:198 editmenu.cpp:1067
+msgid ":"
+msgstr ""
+
+#: editmenu.cpp:93 restaurant_posMain.cpp:289
+msgid "Edit restaurant menu"
+msgstr ""
+
+#: editmenu.cpp:95
+msgid "Menu editing"
+msgstr ""
+
+#: editmenu.cpp:97
+msgid "Choose menu to edit:"
+msgstr ""
+
+#: editmenu.cpp:99
+msgid "Menus"
+msgstr ""
+
+#: editmenu.cpp:106
+msgid "Kitchen by default"
+msgstr ""
+
+#: editmenu.cpp:110 editmenu.cpp:141 editmenu.cpp:199 editmenu.cpp:224
+#: restaurant_posMain.cpp:184 restaurant_posMain.cpp:226 taxes.cpp:60
+#: workers.cpp:52
+msgid "Add"
+msgstr ""
+
+#: editmenu.cpp:112 editmenu.cpp:143 editmenu.cpp:226
+#: restaurant_posMain.cpp:234 taxes.cpp:62
+msgid "Change"
+msgstr ""
+
+#: editmenu.cpp:115 editmenu.cpp:146 editmenu.cpp:160 editmenu.cpp:204
+#: editmenu.cpp:229 restaurant_posMain.cpp:186 restaurant_posMain.cpp:256
+#: taxes.cpp:65 workers.cpp:57
+msgid "Delete"
+msgstr ""
+
+#: editmenu.cpp:118 restaurant_posMain.cpp:291
+msgid "Taxes"
+msgstr ""
+
+#: editmenu.cpp:120
+msgid "Tax group:"
+msgstr ""
+
+#: editmenu.cpp:125 restaurant_posMain.cpp:295
+msgid "Edit"
+msgstr ""
+
+#: editmenu.cpp:137 restaurant_posMain.cpp:229
+msgid "Kitchen"
+msgstr ""
+
+#: editmenu.cpp:150
+msgid "This menu contains:"
+msgstr ""
+
+#: editmenu.cpp:156
+msgid "Parts:"
+msgstr ""
+
+#: editmenu.cpp:164
+msgid "Base price:"
+msgstr ""
+
+#: editmenu.cpp:169
+msgid "Comment:"
+msgstr ""
+
+#: editmenu.cpp:173 restaurant_posMain.cpp:174 settings.cpp:33
+msgid "Save"
+msgstr ""
+
+#: editmenu.cpp:181
+msgid "<--"
+msgstr ""
+
+#: editmenu.cpp:184
+msgid "OR"
+msgstr ""
+
+#: editmenu.cpp:189
+msgid "Ingridients"
+msgstr ""
+
+#: editmenu.cpp:191
+msgid "Groups"
+msgstr ""
+
+#: editmenu.cpp:201 workers.cpp:54
+msgid "Rename"
+msgstr ""
+
+#: editmenu.cpp:218
+msgid "Price change:"
+msgstr ""
+
+#: editmenu.cpp:236 product_stats.cpp:78 stats_today.cpp:185 taxes.cpp:69
+#: workers.cpp:62
+msgid "Close"
+msgstr ""
+
+#: editmenu.cpp:309
+msgid "This group is already exists."
+msgstr ""
+
+#: editmenu.cpp:425
+msgid "This ingridient already exists."
+msgstr ""
+
+#: editmenu.cpp:680
+msgid "This menu already exists."
+msgstr ""
+
+#: editmenu.cpp:698
+msgid "Please create tax group first!"
+msgstr ""
+
+#: editmenu.cpp:886
+msgid "This name of dish already exists."
+msgstr ""
+
+#: editmenu.cpp:905
+msgid "You have to choose menu to which you want to add a dish."
+msgstr ""
+
+#: payment.cpp:25
+msgid "Please select payment type."
+msgstr ""
+
+#: payment.cpp:34
+msgid "CASH"
+msgstr ""
+
+#: payment.cpp:36
+msgid "CHARGE"
+msgstr ""
+
+#: payment.cpp:57
+msgid " $ to pay."
+msgstr ""
+
+#: payment.cpp:67
+msgid "Please enter "
+msgstr ""
+
+#: payment.cpp:67
+msgid "$ on credit cards machine. When operation is over press OK."
+msgstr ""
+
+#: payment.cpp:68
+msgid "Charge order"
+msgstr ""
+
+#: perif.cpp:9
+msgid "pos_print"
+msgstr ""
+
+#: perif.cpp:45
+msgid "pos_ticket"
+msgstr ""
+
+#: perif_set_panel.cpp:51
+msgid "Receipt printer"
+msgstr ""
+
+#: perif_set_panel.cpp:53
+msgid "Printing width"
+msgstr ""
+
+#: perif_set_panel.cpp:55
+msgid "40 chars"
+msgstr ""
+
+#: perif_set_panel.cpp:57
+msgid "32 chars"
+msgstr ""
+
+#: perif_set_panel.cpp:59
+msgid "Custom:"
+msgstr ""
+
+#: perif_set_panel.cpp:67 perif_set_panel.cpp:97
+msgid "Custom printer command"
+msgstr ""
+
+#: perif_set_panel.cpp:69
+msgid ""
+"Executed when a receipt needs to be printed. Ovverides default printing."
+msgstr ""
+
+#: perif_set_panel.cpp:75
+msgid "file.txt"
+msgstr ""
+
+#: perif_set_panel.cpp:78
+msgid "Note: The command for printing should accept text file as a parametr."
+msgstr ""
+
+#: perif_set_panel.cpp:84
+msgid "Drawer"
+msgstr ""
+
+#: perif_set_panel.cpp:86
+msgid "Custom drawer command"
+msgstr ""
+
+#: perif_set_panel.cpp:88
+msgid "Executed to open drawer"
+msgstr ""
+
+#: perif_set_panel.cpp:95
+msgid "Kitchen tickets printer"
+msgstr ""
+
+#: perif_set_panel.cpp:104
+msgid "file.html"
+msgstr ""
+
+#: perif_set_panel.cpp:107
+msgid "Note: The command for printing should accept html file as a parametr."
+msgstr ""
+
+#: perif_set_panel.cpp:169 perif_set_panel.cpp:179 restaurant_posMain.cpp:470
+msgid "/program/custom_width"
+msgstr ""
+
+#: perif_set_panel.cpp:172 perif_set_panel.cpp:175 perif_set_panel.cpp:183
+msgid "/program/print_width"
+msgstr ""
+
+#: perif_set_panel.cpp:172
+msgid "40"
+msgstr ""
+
+#: perif_set_panel.cpp:175
+msgid "32"
+msgstr ""
+
+#: perif_set_panel.cpp:189 perif_set_panel.cpp:194 restaurant_posMain.cpp:448
+msgid "/program/custom_print"
+msgstr ""
+
+#: perif_set_panel.cpp:191
+msgid "/program/print_command"
+msgstr ""
+
+#: perif_set_panel.cpp:200 perif_set_panel.cpp:205 restaurant_posMain.cpp:455
+msgid "/program/custom_drawer"
+msgstr ""
+
+#: perif_set_panel.cpp:202
+msgid "/program/drawer_command"
+msgstr ""
+
+#: perif_set_panel.cpp:210 perif_set_panel.cpp:215 restaurant_posMain.cpp:463
+msgid "/program/custom_ticket"
+msgstr ""
+
+#: perif_set_panel.cpp:212
+msgid "/program/ticket_command"
+msgstr ""
+
+#: product_stats.cpp:38
+msgid "Product statistics"
+msgstr ""
+
+#: product_stats.cpp:40
+msgid "Product statistics:"
+msgstr ""
+
+#: product_stats.cpp:45
+msgid "Select dates:"
+msgstr ""
+
+#: product_stats.cpp:53
+msgid "Order by:"
+msgstr ""
+
+#: product_stats.cpp:56
+msgid "Most revenue"
+msgstr ""
+
+#: product_stats.cpp:57
+msgid "Most frequently sold"
+msgstr ""
+
+#: product_stats.cpp:61
+msgid "Limit:"
+msgstr ""
+
+#: product_stats.cpp:64
+msgid "10"
+msgstr ""
+
+#: product_stats.cpp:65
+msgid "15"
+msgstr ""
+
+#: product_stats.cpp:66
+msgid "20"
+msgstr ""
+
+#: product_stats.cpp:67
+msgid "25"
+msgstr ""
+
+#: product_stats.cpp:68
+msgid "30"
+msgstr ""
+
+#: product_stats.cpp:69
+msgid "50"
+msgstr ""
+
+#: product_stats.cpp:70
+msgid "100"
+msgstr ""
+
+#: product_stats.cpp:143
+msgid ""
+"Name of the product       |   Qty   |   Net   |   Taxes   |   Gross\n"
+"\n"
+msgstr ""
+
+#: prog_set_panel.cpp:34
+msgid "Enable kitchen cooperation"
+msgstr ""
+
+#: prog_set_panel.cpp:39
+msgid "By database"
+msgstr ""
+
+#: prog_set_panel.cpp:44
+msgid "By printing"
+msgstr ""
+
+#: prog_set_panel.cpp:49
+msgid "Appearance"
+msgstr ""
+
+#: prog_set_panel.cpp:52
+msgid "Language:"
+msgstr ""
+
+#: prog_set_panel.cpp:55
+msgid "English"
+msgstr ""
+
+#: prog_set_panel.cpp:56
+msgid "Spanish"
+msgstr ""
+
+#: prog_set_panel.cpp:57
+msgid "Polish"
+msgstr ""
+
+#: prog_set_panel.cpp:58
+msgid "Russian"
+msgstr ""
+
+#: prog_set_panel.cpp:61
+msgid ""
+"Note: You need to restart program for language \n"
+"settings to take effect!"
+msgstr ""
+
+#: prog_set_panel.cpp:131 prog_set_panel.cpp:134 restaurant_posMain.cpp:437
+msgid "/program/kitchen"
+msgstr ""
+
+#: prog_set_panel.cpp:140 prog_set_panel.cpp:143 restaurant_posMain.cpp:444
+msgid "/program/kitchen_type"
+msgstr ""
+
+#: prog_set_panel.cpp:143 restaurant_posMain.cpp:444
+msgid "2"
+msgstr ""
+
+#: restaurant_posMain.cpp:153
+msgid "Estes - Open Source Restaurant POS"
+msgstr ""
+
+#: restaurant_posMain.cpp:158
+msgid "Waiter:"
+msgstr ""
+
+#: restaurant_posMain.cpp:160
+msgid "Order comment:"
+msgstr ""
+
+#: restaurant_posMain.cpp:171
+msgid "Order"
+msgstr ""
+
+#: restaurant_posMain.cpp:172
+msgid "New"
+msgstr ""
+
+#: restaurant_posMain.cpp:176
+msgid "Send to kitchen"
+msgstr ""
+
+#: restaurant_posMain.cpp:178
+msgid "Print"
+msgstr ""
+
+#: restaurant_posMain.cpp:180
+msgid "Payment"
+msgstr ""
+
+#: restaurant_posMain.cpp:183
+msgid "Items"
+msgstr ""
+
+#: restaurant_posMain.cpp:190 stats_today.cpp:110 stats_today.cpp:158
+msgid "Total:"
+msgstr ""
+
+#: restaurant_posMain.cpp:194 restaurant_posMain.cpp:202
+#: restaurant_posMain.cpp:210 stats_today.cpp:343 stats_today.cpp:344
+#: stats_today.cpp:345 stats_today.cpp:346 stats_today.cpp:347
+msgid "0.00"
+msgstr ""
+
+#: restaurant_posMain.cpp:198 stats_today.cpp:102 stats_today.cpp:150
+msgid "Taxes:"
+msgstr ""
+
+#: restaurant_posMain.cpp:206
+msgid "To Pay:"
+msgstr ""
+
+#: restaurant_posMain.cpp:217
+msgid "Edit item:"
+msgstr ""
+
+#: restaurant_posMain.cpp:236
+msgid "Comment"
+msgstr ""
+
+#: restaurant_posMain.cpp:241
+msgid "Clear"
+msgstr ""
+
+#: restaurant_posMain.cpp:244
+msgid "Keep values"
+msgstr ""
+
+#: restaurant_posMain.cpp:252
+msgid "Pending:"
+msgstr ""
+
+#: restaurant_posMain.cpp:263
+msgid "Kitchen chat"
+msgstr ""
+
+#: restaurant_posMain.cpp:269
+msgid "Send"
+msgstr ""
+
+#: restaurant_posMain.cpp:279
+msgid "Install structure"
+msgstr ""
+
+#: restaurant_posMain.cpp:281
+msgid "Make backup"
+msgstr ""
+
+#: restaurant_posMain.cpp:283
+msgid "Restore from backup"
+msgstr ""
+
+#: restaurant_posMain.cpp:285
+msgid "Quit\tAlt-F4"
+msgstr ""
+
+#: restaurant_posMain.cpp:285
+msgid "Quit the application"
+msgstr ""
+
+#: restaurant_posMain.cpp:287
+msgid "&File"
+msgstr ""
+
+#: restaurant_posMain.cpp:289
+msgid "Restaurant menu"
+msgstr ""
+
+#: restaurant_posMain.cpp:293
+msgid "Workers"
+msgstr ""
+
+#: restaurant_posMain.cpp:297
+msgid "Account"
+msgstr ""
+
+#: restaurant_posMain.cpp:299
+msgid "Statistics"
+msgstr ""
+
+#: restaurant_posMain.cpp:301
+msgid "Orders"
+msgstr ""
+
+#: restaurant_posMain.cpp:303
+msgid "General"
+msgstr ""
+
+#: restaurant_posMain.cpp:305
+msgid "Display Settings"
+msgstr ""
+
+#: restaurant_posMain.cpp:307
+msgid "Settings"
+msgstr ""
+
+#: restaurant_posMain.cpp:309
+msgid "About\tF1"
+msgstr ""
+
+#: restaurant_posMain.cpp:309
+msgid "Show info about this application"
+msgstr ""
+
+#: restaurant_posMain.cpp:311
+msgid "Help"
+msgstr ""
+
+#: restaurant_posMain.cpp:515
+msgid "Welcome to..."
+msgstr ""
+
+#: restaurant_posMain.cpp:526
+msgid "Could not listen at the specified port !"
+msgstr ""
+
+#: restaurant_posMain.cpp:531
+msgid "Server started. Listening..."
+msgstr ""
+
+#: restaurant_posMain.cpp:546
+msgid "New client connection accepted"
+msgstr ""
+
+#: restaurant_posMain.cpp:550
+msgid "Error: couldn't accept a new connection"
+msgstr ""
+
+#: restaurant_posMain.cpp:583
+msgid "Lost connection."
+msgstr ""
+
+#: restaurant_posMain.cpp:602
+#, c-format
+msgid "%s"
+msgstr ""
+
+#: restaurant_posMain.cpp:613
+msgid "Kitchen: "
+msgstr ""
+
+#: restaurant_posMain.cpp:676
+msgid "Connected to database '"
+msgstr ""
+
+#: restaurant_posMain.cpp:676 restaurant_posMain.cpp:682
+msgid "' on "
+msgstr ""
+
+#: restaurant_posMain.cpp:682
+msgid "Unable no connect to database '"
+msgstr ""
+
+#: restaurant_posMain.cpp:684
+msgid "Unable to connect to the database. Reason:\n"
+msgstr ""
+
+#: restaurant_posMain.cpp:684
+msgid "Not connected."
+msgstr ""
+
+#: restaurant_posMain.cpp:910 restaurant_posMain.cpp:926
+msgid "Select file"
+msgstr ""
+
+#: restaurant_posMain.cpp:915
+msgid "There was a problem. Backup is not done."
+msgstr ""
+
+#: restaurant_posMain.cpp:918 restaurant_posMain.cpp:934
+#: restaurant_posMain.cpp:953
+msgid "You are not connected to the database!"
+msgstr ""
+
+#: restaurant_posMain.cpp:931
+msgid "There was a problem. Data is not restored."
+msgstr ""
+
+#: restaurant_posMain.cpp:950
+msgid "There was a problem. Database structure is not installed"
+msgstr ""
+
+#: restaurant_posMain.cpp:966
+msgid "-"
+msgstr ""
+
+#: restaurant_posMain.cpp:1100
+msgid "This order is not paid. Are you sure you want to delete it?"
+msgstr ""
+
+#: restaurant_posMain.cpp:1100
+msgid "Delete order"
+msgstr ""
+
+#: restaurant_posMain.cpp:1406
+msgid "POS: "
+msgstr ""
+
+#: settings.cpp:63
+msgid "Database"
+msgstr ""
+
+#: settings.cpp:70
+msgid "Program settings"
+msgstr ""
+
+#: settings.cpp:77
+msgid "Peripherals"
+msgstr ""
+
+#: stats_today.cpp:62
+msgid "Sales statistics, account information"
+msgstr ""
+
+#: stats_today.cpp:64
+msgid "Please select dates to view sales statistics:"
+msgstr ""
+
+#: stats_today.cpp:77
+msgid "Orders:"
+msgstr ""
+
+#: stats_today.cpp:79
+msgid "Days:"
+msgstr ""
+
+#: stats_today.cpp:89
+msgid "Totals for the day:"
+msgstr ""
+
+#: stats_today.cpp:94 stats_today.cpp:142
+msgid "Net:"
+msgstr ""
+
+#: stats_today.cpp:118 stats_today.cpp:166
+msgid "Cash:"
+msgstr ""
+
+#: stats_today.cpp:126 stats_today.cpp:174
+msgid "Card:"
+msgstr ""
+
+#: stats_today.cpp:137
+msgid "Totals for the period:"
+msgstr ""
+
+#: taxes.cpp:37
+msgid "Edit taxes"
+msgstr ""
+
+#: taxes.cpp:39
+msgid "Please select a tax group:"
+msgstr ""
+
+#: taxes.cpp:46
+msgid "Value:"
+msgstr ""
+
+#: taxes.cpp:50
+msgid "%"
+msgstr ""
+
+#: taxes.cpp:54 workers.cpp:46
+msgid "Name:"
+msgstr ""
+
+#: taxes.cpp:165
+msgid "This TAX group already exists."
+msgstr ""
+
+#: workers.cpp:35
+msgid "Edit restaurant employees"
+msgstr ""
+
+#: workers.cpp:39
+msgid "List of employees:"
+msgstr ""
+
+#: workers.cpp:131
+msgid "This worker already exists."
+msgstr ""
