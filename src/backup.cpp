@@ -52,7 +52,7 @@ row = res3[h];
 insert_statement << _("(");
 for (size_t g = 0; g < res3.field_names()->size(); g++) {
     mysqlpp::FieldTypes::value_type ft = res3.field_type(g);
-if(ft.id() == 23 || ft.id() == 25 ){ //23 - text, 25 - datetime
+if(ft.quote_q ()){ //need to be quoted
 insert_statement << _("'") << std2wx(std::string(row[g]),wxConvUI) << _("'");
 }else{
 insert_statement << std2wx(std::string(row[g]),wxConvUI);

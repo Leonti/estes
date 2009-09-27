@@ -17,7 +17,7 @@
 #include <datetime.h>
 
 #include <wx/arrimpl.cpp> // this is a magic incantation which must be done!
-//WX_DEFINE_OBJARRAY(receiptArray);
+WX_DEFINE_OBJARRAY(pending_ordersArray);
 
 //(*InternalHeaders(restaurant_posFrame)
 #include <wx/string.h>
@@ -149,7 +149,7 @@ restaurant_posFrame::restaurant_posFrame(wxWindow* parent,wxWindowID id)
     wxMenu* Menu2;
     wxFlexGridSizer* FlexGridSizer5;
     wxStaticBoxSizer* StaticBoxSizer1;
-    
+
     Create(parent, wxID_ANY, _("Estes - Open Source Restaurant POS"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
     FlexGridSizer1 = new wxFlexGridSizer(0, 3, 0, 0);
     FlexGridSizer2 = new wxFlexGridSizer(0, 3, 0, 0);
@@ -318,7 +318,7 @@ restaurant_posFrame::restaurant_posFrame(wxWindow* parent,wxWindowID id)
     SetStatusBar(StatusBar1);
     FlexGridSizer1->Fit(this);
     FlexGridSizer1->SetSizeHints(this);
-    
+
     Connect(ID_LISTCTRL1,wxEVT_COMMAND_LIST_ITEM_SELECTED,(wxObjectEventFunction)&restaurant_posFrame::OncomprasItemSelect);
     Connect(ID_LISTCTRL1,wxEVT_COMMAND_LIST_INSERT_ITEM,(wxObjectEventFunction)&restaurant_posFrame::OncomprasInsertItem);
     Connect(ID_BUTTON5,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&restaurant_posFrame::OnButton5Click);
@@ -381,7 +381,7 @@ restaurant_posFrame::restaurant_posFrame(wxWindow* parent,wxWindowID id)
 
 //printing of tickets handling
 
-printing = new wxHtmlEasyPrinting();
+//printing = new wxHtmlEasyPrinting();
 
 
 
@@ -607,7 +607,7 @@ if(s.Mid(0,2) == _T("r:")){
     long ord_n;
     ord_number.ToLong(&ord_n);
     mark_ready(ord_n);
-wxMessageBox(_T("Order number ") + ord_number + _T(" is ready!"));
+//wxMessageBox(_T("Order number ") + ord_number + _T(" is ready!"));
     }else
     if(s.Mid(0,2) == _T("m:")){
     TextCtrl4 -> AppendText (_("Kitchen: ") + s.Mid(2, s.Length()) + _T("\n"));
@@ -616,9 +616,16 @@ wxMessageBox(_T("Order number ") + ord_number + _T(" is ready!"));
     }
 
 void restaurant_posFrame::mark_ready(int ord_number){
+/*
 wxString msg;
 msg << ord_number;
 wxMessageBox(msg);
+*/
+       for(int i=0; i<pendingOrders.GetCount(); i++){
+       if (pendingOrders[i].id == ord_number){
+ pending_listbox->SetString(i, pending_listbox->GetString(i) + _(" (ready)"));
+       }
+       }
 }
 
 void restaurant_posFrame::fill_pending(){
@@ -634,9 +641,15 @@ mysqlpp::StoreQueryResult::size_type i;
 for (i = 0; i < res.num_rows(); ++i) {
   row = res[i];
                 if(int(row["status"]) != 2){ //2 means this order is paid
-            pending_items.Add(int(row["id"]));
+                    pending_order pendingOrder;
+                    pendingOrder.id = int(row["id"]);
+                    pendingOrder.number = int(row["number"]);
+                    pendingOrder.status = int(row["status"]);
+            pendingOrders.Add(pendingOrder);
             wxString to_append;
-            to_append << int(row["number"]);
+            to_append << pendingOrder.number;
+            if(pendingOrder.status == 4)
+                            to_append << _(" (ready)");
             pending_listbox -> Append(to_append);
                 }
 
@@ -747,20 +760,26 @@ int ind;
     if(pending_listbox -> GetSelection() == wxNOT_FOUND){
         query << "INSERT INTO `orders` (`id`, `number`, `time`, `status`, `waiter_id`, `comment`) VALUES (NULL, '" << (count + 1) << "', CURRENT_TIMESTAMP, '0', '"<< workers_ids[waiter_choice->GetSelection()] <<"' , '"<<wx2std(order_comment->GetValue(),wxConvUI)<<"')";
         query.execute();
-        query << "SELECT `id` FROM `orders` ORDER BY `id` DESC LIMIT 1";
+        query << "SELECT `id`,`number` FROM `orders` ORDER BY `id` DESC LIMIT 1";
         res = query.store();
         mysqlpp::Row row;
         row = res.at(0);
-        ind = int(row["id"]);
 
-        pending_items.Add(ind);
+        pending_order pendingOrder;
+        pendingOrder.id = int(row["id"]);
+        pendingOrder.number = int(row["number"]);
+        pendingOrder.status = 0;
+
+        pendingOrders.Add(pendingOrder);
+        ind = pendingOrder.id;
+
         wxString to_append;
         to_append << (count + 1);
         pending_listbox -> Append(to_append);
 
     }else{
 
-     ind = pending_items[pending_listbox -> GetSelection()];
+     ind = pendingOrders[pending_listbox -> GetSelection()].id;
      query << "UPDATE `orders` SET `waiter_id` = '"<< workers_ids[waiter_choice->GetSelection()] <<"', `comment` = '"<< wx2std(order_comment->GetValue(),wxConvUI) <<"' WHERE `id` = "<< ind <<" LIMIT 1";
      query.execute();
      query << "DELETE FROM `orders_dishes` WHERE `order_id` = " << ind;
@@ -973,7 +992,7 @@ void restaurant_posFrame::Onpending_listboxSelect(wxCommandEvent& event)
        all_items.Clear();
 
         mysqlpp::Query query = conn->query();
-        query << "SELECT * FROM `orders` WHERE `id`=" << pending_items[pending_listbox->GetSelection()];
+        query << "SELECT * FROM `orders` WHERE `id`=" << pendingOrders[pending_listbox->GetSelection()].id;
         mysqlpp::StoreQueryResult res = query.store();
 
  if (res){
@@ -995,7 +1014,7 @@ order_comment->ChangeValue(std2wx(std::string(row["comment"]),wxConvUI));
 
 
 
-        query << "SELECT * FROM `orders_dishes` WHERE `order_id`=" << pending_items[pending_listbox->GetSelection()];
+        query << "SELECT * FROM `orders_dishes` WHERE `order_id`=" << pendingOrders[pending_listbox->GetSelection()].id;
         res = query.store();
        if (res)
         {
@@ -1054,14 +1073,14 @@ if(pay_dlg -> print){
 
 int ind;
     if(pending_listbox -> GetSelection() != wxNOT_FOUND){
-    ind = pending_items[pending_listbox->GetSelection()];
-    pending_items.RemoveAt(pending_listbox->GetSelection(),1);
+    ind = pendingOrders[pending_listbox->GetSelection()].id;
+    pendingOrders.RemoveAt(pending_listbox->GetSelection(),1);
     int sel = pending_listbox->GetSelection();
     pending_listbox->SetSelection(wxNOT_FOUND);
     pending_listbox->Delete(sel);
         }else{
-    ind = pending_items[pending_listbox->GetCount()-1];
-    pending_items.RemoveAt(pending_listbox->GetCount()-1,1);
+    ind = pendingOrders[pending_listbox->GetCount()-1].id;
+    pendingOrders.RemoveAt(pending_listbox->GetCount()-1,1);
     pending_listbox->Delete(pending_listbox->GetCount()-1);
                         }
 
@@ -1100,7 +1119,7 @@ void restaurant_posFrame::OnButton7Click(wxCommandEvent& event)
 wxMessageDialog ask_dlg(this, _("This order is not paid. Are you sure you want to delete it?"), _("Delete order"), wxOK | wxCANCEL);
 if(ask_dlg.ShowModal() == wxID_OK){
         mysqlpp::Query query = conn->query();
-        int ind = pending_items[pending_listbox -> GetSelection()];
+        int ind = pendingOrders[pending_listbox -> GetSelection()].id;
 
         query << "DELETE FROM `orders` WHERE `id` = " << ind;
         query.execute();
@@ -1113,7 +1132,7 @@ if(ask_dlg.ShowModal() == wxID_OK){
 
     all_items.Clear();
     compras -> DeleteAllItems();
-    pending_items.RemoveAt(pending_listbox -> GetSelection(),1);
+    pendingOrders.RemoveAt(pending_listbox -> GetSelection(),1);
 int sel = pending_listbox -> GetSelection();
 pending_listbox -> SetSelection(wxNOT_FOUND);
     pending_listbox -> Delete(sel);
@@ -1366,9 +1385,9 @@ save_order();
 
            int ind;
                if(pending_listbox -> GetSelection() != wxNOT_FOUND){
-           ind = pending_items[pending_listbox->GetSelection()];
+           ind = pendingOrders[pending_listbox->GetSelection()].id;
                }else{
-           ind = pending_items[pending_listbox->GetCount()-1];
+           ind = pendingOrders[pending_listbox->GetCount()-1].id;
                     }
         mysqlpp::Query query = conn->query(); //status '3' means order needed to be prepared in kitchen
         query << "UPDATE `orders` SET `status` = '3' WHERE `id` = "<< ind <<" LIMIT 1";
@@ -1418,9 +1437,9 @@ save_order();
 
            int ind;
                if(pending_listbox -> GetSelection() != wxNOT_FOUND){
-           ind = pending_items[pending_listbox->GetSelection()];
+           ind = pendingOrders[pending_listbox->GetSelection()].id;
                }else{
-           ind = pending_items[pending_listbox->GetCount()-1];
+           ind = pendingOrders[pending_listbox->GetCount()-1].id;
                     }
 
         if(printTicket(formatTicket(ind, conn), set_now.ticket_command, set_now.custom_ticket ) == 1)

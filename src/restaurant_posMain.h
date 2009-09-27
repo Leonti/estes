@@ -40,8 +40,18 @@
 #include "stats_today.h"
 #include "perif.h"
 #include <wx/socket.h>
-//WX_DECLARE_OBJARRAY(receipt_entry, receiptArray);
 
+
+
+
+class pending_order{
+    public:
+
+    int id;
+    int number;
+    int status;
+        };
+WX_DECLARE_OBJARRAY(pending_order, pending_ordersArray);
 
 std::string get_time(void);
 
@@ -206,7 +216,7 @@ class restaurant_posFrame: public wxFrame
      wxSocketServer *Socketserver1;
      wxSocketBase* sockAccepted;
      wxFont* font_listctrl;
-     wxHtmlEasyPrinting* printing;
+//     wxHtmlEasyPrinting* printing;
 //     wxPrintDialog* printdialog;
      wxPrintDialogData* printdialogdata;
      wxPrintData* printdata;
@@ -217,8 +227,8 @@ class restaurant_posFrame: public wxFrame
         wxArrayInt workers_ids;
         int selected_worker;
         itemsArray all_items;
-        wxArrayInt pending_items;
         wxArrayInt taxes_array;
+        pending_ordersArray pendingOrders;
         int item_to_change;
         wxLocale Locale;
         void total(void);
