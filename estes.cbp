@@ -84,8 +84,8 @@
 		<Unit filename="src/workers.h" />
 		<Unit filename="src/wx_std.cpp" />
 		<Unit filename="src/wx_std.h" />
-		<Unit filename="src/wxsmith/restaurant_posframe.wxs" />
-		<Unit filename="src/wxsmith/settings.wxs" />
+		<Unit filename="src/about.cpp" />
+		<Unit filename="src/about.h" />
 		<Extensions>
 			<envvars />
 			<code_completion />
@@ -110,11 +110,12 @@
 					<wxDialog wxs="wxsmith/display_settings.wxs" src="src/display_settings.cpp" hdr="src/display_settings.h" name="display_settings" language="CPP" />
 					<wxDialog wxs="wxsmith/stats_today.wxs" src="src/stats_today.cpp" hdr="src/stats_today.h" name="stats_today" language="CPP" />
 					<wxDialog wxs="wxsmith/product_stats.wxs" src="src/product_stats.cpp" hdr="src/product_stats.h" name="product_stats" language="CPP" />
+					<wxDialog wxs="wxsmith/about.wxs" src="src/about.cpp" hdr="src/about.h" name="about" language="CPP" />
 				</resources>
 			</wxsmith>
 			<AutoVersioning>
 				<Scheme minor_max="10" build_max="0" rev_max="0" rev_rand_max="10" build_times_to_increment_minor="100" />
-				<Settings autoincrement="1" date_declarations="1" do_auto_increment="0" ask_to_increment="0" language="C++" svn="0" svn_directory="" header_path="version.h" />
+				<Settings autoincrement="0" date_declarations="1" do_auto_increment="0" ask_to_increment="0" language="C++" svn="0" svn_directory="" header_path="src/version.h" />
 				<Changes_Log show_changes_editor="0" app_title="released version %M.%m.%b of %p" changeslog_path="ChangesLog.txt" />
 			</AutoVersioning>
 		</Extensions>

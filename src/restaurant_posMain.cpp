@@ -1,12 +1,22 @@
-/***************************************************************
- * Name:      restaurant_posMain.cpp
- * Purpose:   Code for Application Frame
- * Author:    Leonti Bielski (prishelec@gmail.com)
- * Created:   2008-01-26
- * Copyright: Leonti Bielski (http://leonti.ru)
- * License:
- **************************************************************/
-
+/*************************************************************************************
+*  Estes - Restaurant Point Of Sale                                                  *
+*  Copyright (C) 2009  Leonti Bielski                                                *
+*                                                                                    *
+*  This program is free software; you can redistribute it and/or modify              *
+*  it under the terms of the GNU General Public License as published by              *
+*  the Free Software Foundation; either version 2 of the License, or                 *
+*  (at your option) any later version.                                               *
+*                                                                                    *
+*  This program is distributed in the hope that it will be useful,                   *
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of                    *
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                     *
+*  GNU General Public License for more details.                                      *
+*                                                                                    *
+*  You should have received a copy of the GNU General Public License                 *
+*  along with this program; if not, write to the Free Software                       *
+*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA    *
+*************************************************************************************/
+#include "version.h"
 #include "restaurant_posMain.h"
 #include "add_item.h"
 #include "wx_std.h"
@@ -114,12 +124,13 @@ const long restaurant_posFrame::SOCKET_ID = wxNewId();
 BEGIN_EVENT_TABLE(restaurant_posFrame,wxFrame)
     //(*EventTable(restaurant_posFrame)
     //*)
-  EVT_SOCKET(SERVER_ID,  restaurant_posFrame::OnServerEvent)
-  EVT_SOCKET(SOCKET_ID,  restaurant_posFrame::OnSocketEvent)
+    EVT_SOCKET(SERVER_ID,  restaurant_posFrame::OnServerEvent)
+    EVT_SOCKET(SOCKET_ID,  restaurant_posFrame::OnSocketEvent)
 END_EVENT_TABLE()
 
 restaurant_posFrame::restaurant_posFrame(wxWindow* parent,wxWindowID id)
 {
+    vers << AutoVersion::MAJOR << _T(".") << AutoVersion::MINOR << _T(".") << AutoVersion::BUILD;
     printdialogdata = new wxPrintDialogData();
     printdata = new wxPrintData();
 
@@ -349,7 +360,7 @@ restaurant_posFrame::restaurant_posFrame(wxWindow* parent,wxWindowID id)
     //*)
 
 
-
+    SetTitle(_T("Estes ") + vers);
 
 
     dbase_connected = false;
@@ -386,116 +397,135 @@ restaurant_posFrame::restaurant_posFrame(wxWindow* parent,wxWindowID id)
 
 
 
-printdialogdata ->EnableHelp(false);
-printdialogdata ->EnablePageNumbers(false);
-printdialogdata ->EnablePrintToFile(false);
-printdialogdata ->EnableSelection(false);
+    printdialogdata ->EnableHelp(false);
+    printdialogdata ->EnablePageNumbers(false);
+    printdialogdata ->EnablePrintToFile(false);
+    printdialogdata ->EnableSelection(false);
 
 
-fill_pending();
-refresh_taxes();
-refresh_waiters();
-refresh_menus();
-refresh_kitchen();
+    fill_pending();
+    refresh_taxes();
+    refresh_waiters();
+    refresh_menus();
+    refresh_kitchen();
 
 //printing -> PageSetup();
 //printing -> PreviewText(_T("<p>Preved, medved!"));
 }
-void restaurant_posFrame::readSet(){
+void restaurant_posFrame::readSet()
+{
     restaurant_posFrame::conn = new mysqlpp::Connection(false);
 
     config = new wxConfig(_("restaurant_pos"));
     set_now.lang = 0;
     wxString lng = config->Read(_T("program/lang"));
-    if(lng!=_T("")){
+    if(lng!=_T(""))
+    {
         long temp;
         lng.ToLong(&temp);
         set_now.lang = temp;
-        }
+    }
 
 
 
     if (config->Read(_("/program/run")) !=_("1") || config->Read(_("/program/run_again")) == _("1"))
     {
-    settings* set_dlg = new settings(this);
-    set_dlg -> confi = config;
-    set_dlg -> conn = conn;
-    set_dlg -> set_now = &set_now;
-    set_dlg -> fill_all();
-    set_dlg -> ShowModal();
-    delete set_dlg;
- }
+        settings* set_dlg = new settings(this);
+        set_dlg -> confi = config;
+        set_dlg -> conn = conn;
+        set_dlg -> set_now = &set_now;
+        set_dlg -> fill_all();
+        set_dlg -> ShowModal();
+        delete set_dlg;
+    }
 
- if(set_now.lang != 0){
-Locale.Init(set_now.lang, wxLOCALE_CONV_ENCODING);
-wxLocale::AddCatalogLookupPathPrefix(wxT("./lang"));
-                // Initialize the catalogs we'll be using
-Locale.AddCatalog(wxT("restaurant_pos"));
+    if(set_now.lang != 0)
+    {
+        Locale.Init(set_now.lang, wxLOCALE_CONV_ENCODING);
+        wxLocale::AddCatalogLookupPathPrefix(wxT("./lang"));
+        // Initialize the catalogs we'll be using
+        Locale.AddCatalog(wxT("restaurant_pos"));
     }
 
 //set_now.kitchen = false;
-if(config->Read(_("/program/kitchen")) == _("1")){
-     set_now.kitchen = true;
-     }else{
-     set_now.kitchen = false;
-         }
-
-set_now.kitchen_type = 1;
-if(config->Read(_("/program/kitchen_type")) == _("2")){
-     set_now.kitchen_type = 2;
-         }
-
-if(config->Read(_("/program/custom_print")) == _("1")){
-    set_now.custom_print = true;
-    }else{
-    set_now.custom_print = false;
-        }
-set_now.print_command = config->Read(_T("program/print_command"));
-
-if(config->Read(_("/program/custom_drawer")) == _("1")){
-    set_now.custom_drawer = true;
-    }else{
-    set_now.custom_drawer = false;
-        }
-set_now.drawer_command = config->Read(_T("program/drawer_command"));
-
-
-if(config->Read(_("/program/custom_ticket")) == _("1")){
-    set_now.custom_ticket = true;
-    }else{
-    set_now.custom_ticket = false;
-        }
-set_now.ticket_command = config->Read(_T("program/ticket_command"));
-
-if(config->Read(_("/program/custom_width")) == _("1")){
-    set_now.custom_width = true;
+    if(config->Read(_("/program/kitchen")) == _("1"))
+    {
+        set_now.kitchen = true;
+    }
+    else
+    {
+        set_now.kitchen = false;
     }
 
- set_now.print_width = 40; //default setting
-     wxString c_width = config->Read(_T("program/print_width"));
-    if(c_width!=_T("")){
+    set_now.kitchen_type = 1;
+    if(config->Read(_("/program/kitchen_type")) == _("2"))
+    {
+        set_now.kitchen_type = 2;
+    }
+
+    if(config->Read(_("/program/custom_print")) == _("1"))
+    {
+        set_now.custom_print = true;
+    }
+    else
+    {
+        set_now.custom_print = false;
+    }
+    set_now.print_command = config->Read(_T("program/print_command"));
+
+    if(config->Read(_("/program/custom_drawer")) == _("1"))
+    {
+        set_now.custom_drawer = true;
+    }
+    else
+    {
+        set_now.custom_drawer = false;
+    }
+    set_now.drawer_command = config->Read(_T("program/drawer_command"));
+
+
+    if(config->Read(_("/program/custom_ticket")) == _("1"))
+    {
+        set_now.custom_ticket = true;
+    }
+    else
+    {
+        set_now.custom_ticket = false;
+    }
+    set_now.ticket_command = config->Read(_T("program/ticket_command"));
+
+    if(config->Read(_("/program/custom_width")) == _("1"))
+    {
+        set_now.custom_width = true;
+    }
+
+    set_now.print_width = 40; //default setting
+    wxString c_width = config->Read(_T("program/print_width"));
+    if(c_width!=_T(""))
+    {
         long temp;
         c_width.ToLong(&temp);
         set_now.print_width = temp;
-        }
+    }
 
 //reading printint settings
-int bin;
+    int bin;
 
-if(config->Read(_T("program/printing/bin"), &bin)){
-    printdata -> SetBin(wxPrintBin(bin));
-    printdata -> SetCollate(config -> Read(_T("program/printing/collate"), true));
-    printdata -> SetColour(config -> Read(_T("program/printing/colour"), true));
-    printdata -> SetDuplex(wxDuplexMode(config -> Read(_T("program/printing/duplex"), 0l)));
-    printdata -> SetNoCopies(config -> Read(_T("program/printing/nocopies"), 0l));
-    printdata -> SetOrientation(config -> Read(_T("program/printing/orientation"), 0l));
-    printdata -> SetPaperId(wxPaperSize(config -> Read(_T("program/printing/paperid"), 0l)));
-    printdata -> SetPrinterName(config -> Read(_T("program/printing/printername")));
-    printdata -> SetQuality(wxPrintQuality(config -> Read(_T("program/printing/quality"), 0l)));
-    printdialogdata -> SetPrintData(*printdata);
+    if(config->Read(_T("program/printing/bin"), &bin))
+    {
+        printdata -> SetBin(wxPrintBin(bin));
+        printdata -> SetCollate(config -> Read(_T("program/printing/collate"), true));
+        printdata -> SetColour(config -> Read(_T("program/printing/colour"), true));
+        printdata -> SetDuplex(wxDuplexMode(config -> Read(_T("program/printing/duplex"), 0l)));
+        printdata -> SetNoCopies(config -> Read(_T("program/printing/nocopies"), 0l));
+        printdata -> SetOrientation(config -> Read(_T("program/printing/orientation"), 0l));
+        printdata -> SetPaperId(wxPaperSize(config -> Read(_T("program/printing/paperid"), 0l)));
+        printdata -> SetPrinterName(config -> Read(_T("program/printing/printername")));
+        printdata -> SetQuality(wxPrintQuality(config -> Read(_T("program/printing/quality"), 0l)));
+        printdialogdata -> SetPrintData(*printdata);
     }
 
-    }
+}
 
 
 restaurant_posFrame::~restaurant_posFrame()
@@ -511,152 +541,168 @@ void restaurant_posFrame::OnQuit(wxCommandEvent& event)
 
 void restaurant_posFrame::OnAbout(wxCommandEvent& event)
 {
-    wxString msg = wxbuildinfo(long_f);
-    wxMessageBox(msg, _("Welcome to..."));
+    about* about_dlg = new about(this);
+    about_dlg->Show();
 }
 
-bool restaurant_posFrame::startServer(){
-  wxIPV4address addr;
-  addr.Service(3000);
+bool restaurant_posFrame::startServer()
+{
+    wxIPV4address addr;
+    addr.Service(3000);
 
-  Socketserver1 = new wxSocketServer(addr);
+    Socketserver1 = new wxSocketServer(addr);
 
-  if (! Socketserver1->Ok())
-  {
-          StatusBar1->SetStatusText(_("Could not listen at the specified port !"), 1);
-    return false;
-  }
-  else
-  {
-    StatusBar1->SetStatusText(_("Server started. Listening..."), 1);
-  }
-
-  Socketserver1->SetEventHandler(*this, SERVER_ID);
-  Socketserver1->SetNotify(wxSOCKET_CONNECTION_FLAG);
-  Socketserver1->Notify(true);
-  return true;
+    if (! Socketserver1->Ok())
+    {
+        StatusBar1->SetStatusText(_("Could not listen at the specified port !"), 1);
+        return false;
+    }
+    else
+    {
+        StatusBar1->SetStatusText(_("Server started. Listening..."), 1);
     }
 
-void restaurant_posFrame::OnServerEvent(wxSocketEvent& event){
+    Socketserver1->SetEventHandler(*this, SERVER_ID);
+    Socketserver1->SetNotify(wxSOCKET_CONNECTION_FLAG);
+    Socketserver1->Notify(true);
+    return true;
+}
+
+void restaurant_posFrame::OnServerEvent(wxSocketEvent& event)
+{
 //  wxSocketBase *sock;
-  sockAccepted = Socketserver1->Accept(false);
+    sockAccepted = Socketserver1->Accept(false);
 
-  if (sockAccepted)
-  {
-    StatusBar1->SetStatusText(_("New client connection accepted"), 1);
-  }
-  else
-  {
-    StatusBar1->SetStatusText(_("Error: couldn't accept a new connection"), 1);
-    return;
-  }
-
-  sockAccepted->SetEventHandler(*this, SOCKET_ID);
-  sockAccepted->SetNotify(wxSOCKET_INPUT_FLAG | wxSOCKET_LOST_FLAG);
-  sockAccepted->Notify(true);
+    if (sockAccepted)
+    {
+        StatusBar1->SetStatusText(_("New client connection accepted"), 1);
+    }
+    else
+    {
+        StatusBar1->SetStatusText(_("Error: couldn't accept a new connection"), 1);
+        return;
     }
 
-void restaurant_posFrame::OnSocketEvent(wxSocketEvent& event){
-  wxSocketBase *sock = event.GetSocket();
+    sockAccepted->SetEventHandler(*this, SOCKET_ID);
+    sockAccepted->SetNotify(wxSOCKET_INPUT_FLAG | wxSOCKET_LOST_FLAG);
+    sockAccepted->Notify(true);
+}
 
-  switch(event.GetSocketEvent())
-  {
+void restaurant_posFrame::OnSocketEvent(wxSocketEvent& event)
+{
+    wxSocketBase *sock = event.GetSocket();
+
+    switch(event.GetSocketEvent())
+    {
     case wxSOCKET_INPUT:
     {
-      sock->SetNotify(wxSOCKET_LOST_FLAG);
+        sock->SetNotify(wxSOCKET_LOST_FLAG);
 
-    unsigned char c;
-      sock->Read(&c, 1);
+        unsigned char c;
+        sock->Read(&c, 1);
 
-      switch (c)
-      {
-        case 0xBE: readFromKitchen(sock); break; //this means we are receiving something from kitchen
-      //  case 0xCE: Test2(sock); break;
-      //  case 0xDE: Test3(sock); break;
-      }
+        switch (c)
+        {
+        case 0xBE:
+            readFromKitchen(sock);
+            break; //this means we are receiving something from kitchen
+            //  case 0xCE: Test2(sock); break;
+            //  case 0xDE: Test3(sock); break;
+        }
 
-      sock->SetNotify(wxSOCKET_LOST_FLAG | wxSOCKET_INPUT_FLAG);
-      break;
+        sock->SetNotify(wxSOCKET_LOST_FLAG | wxSOCKET_INPUT_FLAG);
+        break;
     }
     case wxSOCKET_LOST:
     {
-      StatusBar1->SetStatusText(_("Lost connection."),1);
-      sock->Destroy();
-      break;
+        StatusBar1->SetStatusText(_("Lost connection."),1);
+        sock->Destroy();
+        break;
     }
-    default: ;
-  }
-      }
+    default:
+        ;
+    }
+}
 
-void restaurant_posFrame::readFromKitchen(wxSocketBase *sock){
+void restaurant_posFrame::readFromKitchen(wxSocketBase *sock)
+{
     unsigned char len;
     char *buf;
     sock->SetFlags(wxSOCKET_WAITALL);
-      // Read the size
-  sock->Read(&len, 1);
-  buf = new char[len];
+    // Read the size
+    sock->Read(&len, 1);
+    buf = new char[len];
 
-  // Read the data
-  sock->Read(buf, len);
-  wxString s;
-  s.Printf(_("%s"), buf);
+    // Read the data
+    sock->Read(buf, len);
+    wxString s;
+    s.Printf(_("%s"), buf);
 //if buf == r:id it means that order 'id' is ready we can update the info
-if(s.Mid(0,2) == _T("r:")){
-    //here do something useful :)
-    wxString ord_number = s.Mid(2, s.Length());
-    long ord_n;
-    ord_number.ToLong(&ord_n);
-    mark_ready(ord_n);
+    if(s.Mid(0,2) == _T("r:"))
+    {
+        //here do something useful :)
+        wxString ord_number = s.Mid(2, s.Length());
+        long ord_n;
+        ord_number.ToLong(&ord_n);
+        mark_ready(ord_n);
 //wxMessageBox(_T("Order number ") + ord_number + _T(" is ready!"));
-    }else
-    if(s.Mid(0,2) == _T("m:")){
-    TextCtrl4 -> AppendText (_("Kitchen: ") + s.Mid(2, s.Length()) + _T("\n"));
-        }
-
+    }
+    else if(s.Mid(0,2) == _T("m:"))
+    {
+        TextCtrl4 -> AppendText (_("Kitchen: ") + s.Mid(2, s.Length()) + _T("\n"));
     }
 
-void restaurant_posFrame::mark_ready(int ord_number){
-/*
-wxString msg;
-msg << ord_number;
-wxMessageBox(msg);
-*/
-       for(int i=0; i<pendingOrders.GetCount(); i++){
-       if (pendingOrders[i].id == ord_number){
- pending_listbox->SetString(i, pending_listbox->GetString(i) + _(" (ready)"));
-       }
-       }
 }
 
-void restaurant_posFrame::fill_pending(){
-            mysqlpp::Query query = conn->query();
-        query << "SELECT * FROM `orders` WHERE `time` > '"<< get_time() <<"'";
-        mysqlpp::StoreQueryResult res = query.store();
-               if (res)
+void restaurant_posFrame::mark_ready(int ord_number)
+{
+    /*
+    wxString msg;
+    msg << ord_number;
+    wxMessageBox(msg);
+    */
+    for(int i=0; i<pendingOrders.GetCount(); i++)
+    {
+        if (pendingOrders[i].id == ord_number)
         {
-            if (res.num_rows() != 0){
+            pending_listbox->SetString(i, pending_listbox->GetString(i) + _(" (ready)"));
+        }
+    }
+}
 
-mysqlpp::Row row;
-mysqlpp::StoreQueryResult::size_type i;
-for (i = 0; i < res.num_rows(); ++i) {
-  row = res[i];
-                if(int(row["status"]) != 2){ //2 means this order is paid
+void restaurant_posFrame::fill_pending()
+{
+    mysqlpp::Query query = conn->query();
+    query << "SELECT * FROM `orders` WHERE `time` > '"<< get_time() <<"'";
+    mysqlpp::StoreQueryResult res = query.store();
+    if (res)
+    {
+        if (res.num_rows() != 0)
+        {
+
+            mysqlpp::Row row;
+            mysqlpp::StoreQueryResult::size_type i;
+            for (i = 0; i < res.num_rows(); ++i)
+            {
+                row = res[i];
+                if(int(row["status"]) != 2)  //2 means this order is paid
+                {
                     pending_order pendingOrder;
                     pendingOrder.id = int(row["id"]);
                     pendingOrder.number = int(row["number"]);
                     pendingOrder.status = int(row["status"]);
-            pendingOrders.Add(pendingOrder);
-            wxString to_append;
-            to_append << pendingOrder.number;
-            if(pendingOrder.status == 4)
-                            to_append << _(" (ready)");
-            pending_listbox -> Append(to_append);
+                    pendingOrders.Add(pendingOrder);
+                    wxString to_append;
+                    to_append << pendingOrder.number;
+                    if(pendingOrder.status == 4)
+                        to_append << _(" (ready)");
+                    pending_listbox -> Append(to_append);
                 }
 
-                }
             }
         }
     }
+}
 
 
 
@@ -710,10 +756,12 @@ void restaurant_posFrame::OnButton1Click(wxCommandEvent& event)
     //10,9,8
 //later other way ;)
 
-for(int i=0; i<menus_show.GetCount(); i++){
-    add_frame -> menus_to_show.Add(menus_show[i]);
-}
-    if(set_now.kitchen == true) add_frame -> kitchen = true; else add_frame -> kitchen = false;
+    for(int i=0; i<menus_show.GetCount(); i++)
+    {
+        add_frame -> menus_to_show.Add(menus_show[i]);
+    }
+    if(set_now.kitchen == true) add_frame -> kitchen = true;
+    else add_frame -> kitchen = false;
     add_frame -> main_list_ctrl = compras;
     add_frame -> items_add_item = &all_items;
     add_frame -> main_font_listctrl = font_listctrl;
@@ -727,17 +775,20 @@ void restaurant_posFrame::OnButton2Click(wxCommandEvent& event)
     clear_order();
     add_additional_clear();
 }
-void restaurant_posFrame::clear_order(){
+void restaurant_posFrame::clear_order()
+{
     compras -> DeleteAllItems();
     all_items.Clear();
     pending_listbox->SetSelection(wxNOT_FOUND);
     waiter_choice->SetSelection(0);
     order_comment->Clear();
     total();
-    }
+}
 
-void restaurant_posFrame::save_order(){
-    if(all_items.GetCount()!=0){
+void restaurant_posFrame::save_order()
+{
+    if(all_items.GetCount()!=0)
+    {
         mysqlpp::Query query = conn->query();
 //        query << "SELECT `id` FROM `orders` WHERE `time` > '"<< get_time() <<"'";
 //        mysqlpp::StoreQueryResult res = query.store();  //Should be more elegant way to count rows
@@ -747,107 +798,118 @@ void restaurant_posFrame::save_order(){
         query << "SELECT `number` FROM `orders` WHERE `time` > '" << get_time() << "'ORDER BY `id` DESC LIMIT 1";
         mysqlpp::StoreQueryResult res = query.store();
         mysqlpp::Row row;
-        if(res.num_rows() != 0 ){
+        if(res.num_rows() != 0 )
+        {
 
-        row = res.at(0);
-        count = int(row["number"]);
+            row = res.at(0);
+            count = int(row["number"]);
         }
 
 
 
 //now actually adding new order
-int ind;
-    if(pending_listbox -> GetSelection() == wxNOT_FOUND){
-        query << "INSERT INTO `orders` (`id`, `number`, `time`, `status`, `waiter_id`, `comment`) VALUES (NULL, '" << (count + 1) << "', CURRENT_TIMESTAMP, '0', '"<< workers_ids[waiter_choice->GetSelection()] <<"' , '"<<wx2std(order_comment->GetValue(),wxConvUI)<<"')";
-        query.execute();
-        query << "SELECT `id`,`number` FROM `orders` ORDER BY `id` DESC LIMIT 1";
-        res = query.store();
-        mysqlpp::Row row;
-        row = res.at(0);
+        int ind;
+        if(pending_listbox -> GetSelection() == wxNOT_FOUND)
+        {
+            query << "INSERT INTO `orders` (`id`, `number`, `time`, `status`, `waiter_id`, `comment`) VALUES (NULL, '" << (count + 1) << "', CURRENT_TIMESTAMP, '0', '"<< workers_ids[waiter_choice->GetSelection()] <<"' , '"<<wx2std(order_comment->GetValue(),wxConvUI)<<"')";
+            query.execute();
+            query << "SELECT `id`,`number` FROM `orders` ORDER BY `id` DESC LIMIT 1";
+            res = query.store();
+            mysqlpp::Row row;
+            row = res.at(0);
 
-        pending_order pendingOrder;
-        pendingOrder.id = int(row["id"]);
-        pendingOrder.number = int(row["number"]);
-        pendingOrder.status = 0;
+            pending_order pendingOrder;
+            pendingOrder.id = int(row["id"]);
+            pendingOrder.number = int(row["number"]);
+            pendingOrder.status = 0;
 
-        pendingOrders.Add(pendingOrder);
-        ind = pendingOrder.id;
+            pendingOrders.Add(pendingOrder);
+            ind = pendingOrder.id;
 
-        wxString to_append;
-        to_append << (count + 1);
-        pending_listbox -> Append(to_append);
+            wxString to_append;
+            to_append << (count + 1);
+            pending_listbox -> Append(to_append);
 
-    }else{
+        }
+        else
+        {
 
-     ind = pendingOrders[pending_listbox -> GetSelection()].id;
-     query << "UPDATE `orders` SET `waiter_id` = '"<< workers_ids[waiter_choice->GetSelection()] <<"', `comment` = '"<< wx2std(order_comment->GetValue(),wxConvUI) <<"' WHERE `id` = "<< ind <<" LIMIT 1";
-     query.execute();
-     query << "DELETE FROM `orders_dishes` WHERE `order_id` = " << ind;
-     query.execute();
+            ind = pendingOrders[pending_listbox -> GetSelection()].id;
+            query << "UPDATE `orders` SET `waiter_id` = '"<< workers_ids[waiter_choice->GetSelection()] <<"', `comment` = '"<< wx2std(order_comment->GetValue(),wxConvUI) <<"' WHERE `id` = "<< ind <<" LIMIT 1";
+            query.execute();
+            query << "DELETE FROM `orders_dishes` WHERE `order_id` = " << ind;
+            query.execute();
         }
 
-        for(int i=0; i<all_items.GetCount(); i++){
-int kitchen = 1;
-                if(!all_items[i].kitchen){
-                    kitchen = 0;
-                    }
+        for(int i=0; i<all_items.GetCount(); i++)
+        {
+            int kitchen = 1;
+            if(!all_items[i].kitchen)
+            {
+                kitchen = 0;
+            }
 
-        query << "INSERT INTO `orders_dishes` (`id`, `order_id`, `qty`, `name`, `price`, `tax`, `tax_id`, `comment`, `kitchen`) VALUES (NULL, '"<< ind <<"', '"<< all_items[i].qty <<"', '"<< wx2std(all_items[i].name, wxConvUI) <<"', '"<< all_items[i].price <<"', '"<< all_items[i].tax <<"', '"<< all_items[i].tax_id << "', '"<< wx2std(all_items[i].comment, wxConvUI) <<"', '"<< kitchen <<"')";
-        query.execute();
+            query << "INSERT INTO `orders_dishes` (`id`, `order_id`, `qty`, `name`, `price`, `tax`, `tax_id`, `comment`, `kitchen`) VALUES (NULL, '"<< ind <<"', '"<< all_items[i].qty <<"', '"<< wx2std(all_items[i].name, wxConvUI) <<"', '"<< all_items[i].price <<"', '"<< all_items[i].tax <<"', '"<< all_items[i].tax_id << "', '"<< wx2std(all_items[i].comment, wxConvUI) <<"', '"<< kitchen <<"')";
+            query.execute();
 
-        query << "SELECT `id` FROM `orders_dishes` ORDER BY `id` DESC LIMIT 1";
-        res = query.store();
-        mysqlpp::Row row;
-        row = res.at(0);
-        int orderDishId = int(row["id"]);
+            query << "SELECT `id` FROM `orders_dishes` ORDER BY `id` DESC LIMIT 1";
+            res = query.store();
+            mysqlpp::Row row;
+            row = res.at(0);
+            int orderDishId = int(row["id"]);
 
 
-        wxArrayString parts;
-        parts = explode(all_items[i].parts);
-for(int j=0; j< parts.GetCount(); ++j){
-long partId = 0;
-int use = 0;
-wxString n = _T("n");
-if(parts[j].Mid(0,1) == n){
-    wxString part = parts[j].Mid(1,parts[j].Length()-1);
-    part.ToLong(&partId);
-    use = 0;
-    }else{
-    parts[j].ToLong(&partId);
-    use = 1;
+            wxArrayString parts;
+            parts = explode(all_items[i].parts);
+            for(int j=0; j< parts.GetCount(); ++j)
+            {
+                long partId = 0;
+                int use = 0;
+                wxString n = _T("n");
+                if(parts[j].Mid(0,1) == n)
+                {
+                    wxString part = parts[j].Mid(1,parts[j].Length()-1);
+                    part.ToLong(&partId);
+                    use = 0;
+                }
+                else
+                {
+                    parts[j].ToLong(&partId);
+                    use = 1;
+                }
+                query << "INSERT INTO `orders_dishes_parts` (`id`, `orders_dishes_id`, `parts_id`, `using`) VALUES (NULL, '"<< orderDishId <<"', '"<< partId <<"', '"<< use <<"')";
+                query.execute();
+
+            }
+
         }
-        query << "INSERT INTO `orders_dishes_parts` (`id`, `orders_dishes_id`, `parts_id`, `using`) VALUES (NULL, '"<< orderDishId <<"', '"<< partId <<"', '"<< use <<"')";
-        query.execute();
-
-    }
-
-                    }
 
 
     }
 
-    }
+}
 
 
-void restaurant_posFrame::total(void){
+void restaurant_posFrame::total(void)
+{
 
-        double total = 0;
-        double taxes = 0;
+    double total = 0;
+    double taxes = 0;
     for (int i=0; i< all_items.GetCount(); i++)
     {
 
-    total += all_items[i].price * all_items[i].qty;
-    taxes += all_items[i].price * all_items[i].tax * all_items[i].qty;
+        total += all_items[i].price * all_items[i].qty;
+        taxes += all_items[i].price * all_items[i].tax * all_items[i].qty;
     }
-total = round_2(total);
-taxes = round_2(taxes);
+    total = round_2(total);
+    taxes = round_2(taxes);
 
     wxString to_p;
     order_total = round_2(total + taxes);
- StaticTotalV -> SetLabel(addZero(total));
-  StaticTaxesV -> SetLabel(addZero(taxes));
-   StaticToPayV -> SetLabel(addZero(total + taxes));
-    }
+    StaticTotalV -> SetLabel(addZero(total));
+    StaticTaxesV -> SetLabel(addZero(taxes));
+    StaticToPayV -> SetLabel(addZero(total + taxes));
+}
 
 void restaurant_posFrame::OnMenuItem5Selected(wxCommandEvent& event)
 {
@@ -862,19 +924,22 @@ void restaurant_posFrame::OnMenuItem5Selected(wxCommandEvent& event)
 
 void restaurant_posFrame::OnButton3Click(wxCommandEvent& event)
 {
-wxArrayInt to_delete;
-    for(int i=0; i< compras -> GetItemCount(); i++){
-      if(compras -> GetItemState(i, wxLIST_STATE_SELECTED) == wxLIST_STATE_SELECTED) {
+    wxArrayInt to_delete;
+    for(int i=0; i< compras -> GetItemCount(); i++)
+    {
+        if(compras -> GetItemState(i, wxLIST_STATE_SELECTED) == wxLIST_STATE_SELECTED)
+        {
             to_delete.Add(i);
-          }
         }
+    }
 
-      for(int i = 0; i<to_delete.GetCount(); i++){ //have to do it because whan we delete something from array, number is changing
-          compras -> DeleteItem(to_delete[i]-i);
+    for(int i = 0; i<to_delete.GetCount(); i++)  //have to do it because whan we delete something from array, number is changing
+    {
+        compras -> DeleteItem(to_delete[i]-i);
         all_items.RemoveAt(to_delete[i]-i);
 
-          }
-total();
+    }
+    total();
 }
 
 
@@ -900,10 +965,11 @@ void restaurant_posFrame::OnMenu5Selected(wxCommandEvent& event)
 {
     settings* set_dlg = new settings(this);
     set_dlg -> confi = config;
-    if(dbase_connected == true){
-    set_dlg -> dbase_connected = true;
+    if(dbase_connected == true)
+    {
+        set_dlg -> dbase_connected = true;
     }
-        set_dlg -> conn = conn;
+    set_dlg -> conn = conn;
     set_dlg -> set_now = &set_now;
     set_dlg -> printdialogdata = printdialogdata;
     set_dlg -> fill_all();
@@ -918,64 +984,76 @@ void restaurant_posFrame::OnMenu5Selected(wxCommandEvent& event)
     {
         connect_to_db();
     }
-        refresh_kitchen();
+    refresh_kitchen();
 
 }
 
 void restaurant_posFrame::OnMenu7Selected(wxCommandEvent& event)
 {
     //make backup
-        if(dbase_connected){
-    wxFileDialog* save_file_dlg = new wxFileDialog(this, _("Select file"), wxEmptyString, wxEmptyString, wxFileSelectorDefaultWildcardStr, wxFD_DEFAULT_STYLE|wxFD_SAVE, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
-    save_file_dlg -> ShowModal();
-    if(save_file_dlg->GetFilename() != _("")){
+    if(dbase_connected)
+    {
+        wxFileDialog* save_file_dlg = new wxFileDialog(this, _("Select file"), wxEmptyString, wxEmptyString, wxFileSelectorDefaultWildcardStr, wxFD_DEFAULT_STYLE|wxFD_SAVE, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
+        save_file_dlg -> ShowModal();
+        if(save_file_dlg->GetFilename() != _(""))
+        {
 //    wxString result;
-   int result = makeDump(conn, save_file_dlg -> GetPath());
-if(result == 0) wxMessageBox(_("There was a problem. Backup is not done."));
-    }
-        }else{
-     wxMessageBox(_("You are not connected to the database!"));
+            int result = makeDump(conn, save_file_dlg -> GetPath());
+            if(result == 0) wxMessageBox(_("There was a problem. Backup is not done."));
         }
+    }
+    else
+    {
+        wxMessageBox(_("You are not connected to the database!"));
+    }
 }
 
 void restaurant_posFrame::OnMenu8Selected(wxCommandEvent& event)
 {
     //rstore from backup
-    if(dbase_connected){
-    wxFileDialog* open_file_dlg = new wxFileDialog(this, _("Select file"), wxEmptyString, wxEmptyString, wxFileSelectorDefaultWildcardStr, wxFD_DEFAULT_STYLE|wxFD_OPEN, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
-    open_file_dlg -> ShowModal();
-        if(open_file_dlg->GetFilename() != _("")){
-   // wxString result;
-    int result = restoreFromDump(conn, open_file_dlg -> GetPath());
-if(result == 0) wxMessageBox(_("There was a problem. Data is not restored."));
+    if(dbase_connected)
+    {
+        wxFileDialog* open_file_dlg = new wxFileDialog(this, _("Select file"), wxEmptyString, wxEmptyString, wxFileSelectorDefaultWildcardStr, wxFD_DEFAULT_STYLE|wxFD_OPEN, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
+        open_file_dlg -> ShowModal();
+        if(open_file_dlg->GetFilename() != _(""))
+        {
+            // wxString result;
+            int result = restoreFromDump(conn, open_file_dlg -> GetPath());
+            if(result == 0) wxMessageBox(_("There was a problem. Data is not restored."));
         }
-    }else{
-     wxMessageBox(_("You are not connected to the database!"));
-        }
+    }
+    else
+    {
+        wxMessageBox(_("You are not connected to the database!"));
+    }
 
 }
 
 void restaurant_posFrame::OnMenu6Selected(wxCommandEvent& event)
 {
 
-    if(dbase_connected){
+    if(dbase_connected)
+    {
 
- //   int result = restore_table(host, user, pass, dbase, _("table_schema.sql"));
-         wxStandardPaths path;
-wxFileName tableName;
-tableName.Assign(path.GetDataDir(),_T("table_schema.sql"));
-   int result = restoreFromDump(conn, tableName.GetFullPath());
+//   int result = restore_table(host, user, pass, dbase, _("table_schema.sql"));
+        wxStandardPaths path;
+        wxFileName tableName;
+        tableName.Assign(path.GetDataDir(),_T("table_schema.sql"));
+        int result = restoreFromDump(conn, tableName.GetFullPath());
 
-if(result == 0) wxMessageBox(_("There was a problem. Database structure is not installed"));
+        if(result == 0) wxMessageBox(_("There was a problem. Database structure is not installed"));
 
-    }else{
-     wxMessageBox(_("You are not connected to the database!"));
-        }
+    }
+    else
+    {
+        wxMessageBox(_("You are not connected to the database!"));
+    }
 
 
 }
 
-std::string get_time(){
+std::string get_time()
+{
     time_t rawtime;
     struct tm * comp_time;
     time ( &rawtime );
@@ -984,117 +1062,129 @@ std::string get_time(){
     wxString db_date;
     db_date << (1900 + comp_time->tm_year) << _("-") << (1 + comp_time->tm_mon) << _("-") << comp_time->tm_mday;
     return wx2std(db_date, wxConvUI);
-    }
+}
 
 void restaurant_posFrame::Onpending_listboxSelect(wxCommandEvent& event)
 {
-       compras -> DeleteAllItems();
-       all_items.Clear();
+    compras -> DeleteAllItems();
+    all_items.Clear();
 
-        mysqlpp::Query query = conn->query();
-        query << "SELECT * FROM `orders` WHERE `id`=" << pendingOrders[pending_listbox->GetSelection()].id;
-        mysqlpp::StoreQueryResult res = query.store();
+    mysqlpp::Query query = conn->query();
+    query << "SELECT * FROM `orders` WHERE `id`=" << pendingOrders[pending_listbox->GetSelection()].id;
+    mysqlpp::StoreQueryResult res = query.store();
 
- if (res){
+    if (res)
+    {
 
-mysqlpp::Row row = res.at(0);
-int wait_id = int(row["waiter_id"]);
-if(wait_id != 0){
-for(int i=0; i<workers_ids.GetCount(); i++){
-if(workers_ids[i] == wait_id){
- waiter_choice->SetSelection(i);
- break;
-    }
-    }
-}
-order_comment->ChangeValue(std2wx(std::string(row["comment"]),wxConvUI));
-     }
-
-
-
-
-
-        query << "SELECT * FROM `orders_dishes` WHERE `order_id`=" << pendingOrders[pending_listbox->GetSelection()].id;
-        res = query.store();
-       if (res)
+        mysqlpp::Row row = res.at(0);
+        int wait_id = int(row["waiter_id"]);
+        if(wait_id != 0)
         {
+            for(int i=0; i<workers_ids.GetCount(); i++)
+            {
+                if(workers_ids[i] == wait_id)
+                {
+                    waiter_choice->SetSelection(i);
+                    break;
+                }
+            }
+        }
+        order_comment->ChangeValue(std2wx(std::string(row["comment"]),wxConvUI));
+    }
 
-mysqlpp::Row row;
-mysqlpp::StoreQueryResult::size_type i;
-for (i = 0; i < res.num_rows(); ++i) {
-  row = res[i];
-        item_entry dish_to_add;
-        dish_to_add.qty = int(row["qty"]);
-        dish_to_add.name = std2wx(std::string(row["name"]), wxConvUI);
-        dish_to_add.tax = double(row["tax"]);
-        dish_to_add.tax_id = int(row["tax_id"]);
-        dish_to_add.price = double(row["price"]);
-        dish_to_add.comment =  std2wx(std::string(row["comment"]), wxConvUI);
-        dish_to_add.kitchen = false;
-        if(int(row["kitchen"]) == 1){
-            dish_to_add.kitchen = true;
+
+
+
+
+    query << "SELECT * FROM `orders_dishes` WHERE `order_id`=" << pendingOrders[pending_listbox->GetSelection()].id;
+    res = query.store();
+    if (res)
+    {
+
+        mysqlpp::Row row;
+        mysqlpp::StoreQueryResult::size_type i;
+        for (i = 0; i < res.num_rows(); ++i)
+        {
+            row = res[i];
+            item_entry dish_to_add;
+            dish_to_add.qty = int(row["qty"]);
+            dish_to_add.name = std2wx(std::string(row["name"]), wxConvUI);
+            dish_to_add.tax = double(row["tax"]);
+            dish_to_add.tax_id = int(row["tax_id"]);
+            dish_to_add.price = double(row["price"]);
+            dish_to_add.comment =  std2wx(std::string(row["comment"]), wxConvUI);
+            dish_to_add.kitchen = false;
+            if(int(row["kitchen"]) == 1)
+            {
+                dish_to_add.kitchen = true;
             }
 
-        all_items.Add(dish_to_add);
+            all_items.Add(dish_to_add);
 
 
 
-        //adding to listctrl
+            //adding to listctrl
             wxString price;
-    wxString qty;
-    qty << dish_to_add.qty;
+            wxString qty;
+            qty << dish_to_add.qty;
 //    items_add_item -> Add(dish_to_add);
-    long tmp = compras -> InsertItem(compras -> GetItemCount(), qty, 0);
-    compras->SetItemData(tmp, 1);
-    compras->SetItemFont(tmp, *font_listctrl);
-    compras->SetItem(tmp, 1, dish_to_add.name);
-    compras->SetItem(tmp, 2, addZero(dish_to_add.price));
+            long tmp = compras -> InsertItem(compras -> GetItemCount(), qty, 0);
+            compras->SetItemData(tmp, 1);
+            compras->SetItemFont(tmp, *font_listctrl);
+            compras->SetItem(tmp, 1, dish_to_add.name);
+            compras->SetItem(tmp, 2, addZero(dish_to_add.price));
 
-                }
-total();
         }
+        total();
+    }
 
 }
 
 void restaurant_posFrame::OnButton4Click(wxCommandEvent& event)
 {
-    if(all_items.GetCount()!=0){ //this means we have some item to check out
-    if(pending_listbox -> GetSelection() == wxNOT_FOUND){ //this means those items are not saved
-save_order();
-    }
-
-payment *pay_dlg = new payment(this);
-pay_dlg->fill_all(order_total);
-pay_dlg -> ShowModal();
-
-
-if(pay_dlg -> print){
-
-
-int ind;
-    if(pending_listbox -> GetSelection() != wxNOT_FOUND){
-    ind = pendingOrders[pending_listbox->GetSelection()].id;
-    pendingOrders.RemoveAt(pending_listbox->GetSelection(),1);
-    int sel = pending_listbox->GetSelection();
-    pending_listbox->SetSelection(wxNOT_FOUND);
-    pending_listbox->Delete(sel);
-        }else{
-    ind = pendingOrders[pending_listbox->GetCount()-1].id;
-    pendingOrders.RemoveAt(pending_listbox->GetCount()-1,1);
-    pending_listbox->Delete(pending_listbox->GetCount()-1);
-                        }
-
-        mysqlpp::Query query = conn->query();
-        query << "UPDATE `orders` SET `status` = '2', `pay_type` = '"<< pay_dlg->type <<"', `amount_given` = '"<< pay_dlg->paid <<"', `amount` = '"<< order_total <<"', `taxes` = '"<< wx2std(StaticTaxesV->GetLabel(),wxConvUI) <<"' WHERE `id` = "<< ind <<" LIMIT 1";
-        query.execute();
-        printReceipt(formatCheque(ind, conn, set_now.print_width), set_now.print_command, set_now.custom_print );
-        openDrawer(set_now.drawer_command, set_now.custom_drawer );
-        clear_order();
-        add_additional_clear();
- }
-
-delete pay_dlg;
+    if(all_items.GetCount()!=0)  //this means we have some item to check out
+    {
+        if(pending_listbox -> GetSelection() == wxNOT_FOUND)  //this means those items are not saved
+        {
+            save_order();
         }
+
+        payment *pay_dlg = new payment(this);
+        pay_dlg->fill_all(order_total);
+        pay_dlg -> ShowModal();
+
+
+        if(pay_dlg -> print)
+        {
+
+
+            int ind;
+            if(pending_listbox -> GetSelection() != wxNOT_FOUND)
+            {
+                ind = pendingOrders[pending_listbox->GetSelection()].id;
+                pendingOrders.RemoveAt(pending_listbox->GetSelection(),1);
+                int sel = pending_listbox->GetSelection();
+                pending_listbox->SetSelection(wxNOT_FOUND);
+                pending_listbox->Delete(sel);
+            }
+            else
+            {
+                ind = pendingOrders[pending_listbox->GetCount()-1].id;
+                pendingOrders.RemoveAt(pending_listbox->GetCount()-1,1);
+                pending_listbox->Delete(pending_listbox->GetCount()-1);
+            }
+
+            mysqlpp::Query query = conn->query();
+            query << "UPDATE `orders` SET `status` = '2', `pay_type` = '"<< pay_dlg->type <<"', `amount_given` = '"<< pay_dlg->paid <<"', `amount` = '"<< order_total <<"', `taxes` = '"<< wx2std(StaticTaxesV->GetLabel(),wxConvUI) <<"' WHERE `id` = "<< ind <<" LIMIT 1";
+            query.execute();
+            printReceipt(formatCheque(ind, conn, set_now.print_width), set_now.print_command, set_now.custom_print );
+            openDrawer(set_now.drawer_command, set_now.custom_drawer );
+            clear_order();
+            add_additional_clear();
+        }
+
+        delete pay_dlg;
+    }
 }
 
 void restaurant_posFrame::OnButton5Click(wxCommandEvent& event)
@@ -1115,48 +1205,50 @@ void restaurant_posFrame::OnButton5Click(wxCommandEvent& event)
 
 void restaurant_posFrame::OnButton7Click(wxCommandEvent& event)
 {
-        if(pending_listbox -> GetSelection() != wxNOT_FOUND){
-wxMessageDialog ask_dlg(this, _("This order is not paid. Are you sure you want to delete it?"), _("Delete order"), wxOK | wxCANCEL);
-if(ask_dlg.ShowModal() == wxID_OK){
-        mysqlpp::Query query = conn->query();
-        int ind = pendingOrders[pending_listbox -> GetSelection()].id;
+    if(pending_listbox -> GetSelection() != wxNOT_FOUND)
+    {
+        wxMessageDialog ask_dlg(this, _("This order is not paid. Are you sure you want to delete it?"), _("Delete order"), wxOK | wxCANCEL);
+        if(ask_dlg.ShowModal() == wxID_OK)
+        {
+            mysqlpp::Query query = conn->query();
+            int ind = pendingOrders[pending_listbox -> GetSelection()].id;
 
-        query << "DELETE FROM `orders` WHERE `id` = " << ind;
-        query.execute();
+            query << "DELETE FROM `orders` WHERE `id` = " << ind;
+            query.execute();
 
-        query << "DELETE FROM `orders_dishes_parts` WHERE `orders_dishes_id`=ANY(SELECT `id` FROM `orders_dishes` WHERE `order_id`="<< ind <<")";
-        query.execute();
+            query << "DELETE FROM `orders_dishes_parts` WHERE `orders_dishes_id`=ANY(SELECT `id` FROM `orders_dishes` WHERE `order_id`="<< ind <<")";
+            query.execute();
 
-        query << "DELETE FROM `orders_dishes` WHERE `order_id` = " << ind;
-        query.execute();
+            query << "DELETE FROM `orders_dishes` WHERE `order_id` = " << ind;
+            query.execute();
 
-    all_items.Clear();
-    compras -> DeleteAllItems();
-    pendingOrders.RemoveAt(pending_listbox -> GetSelection(),1);
-int sel = pending_listbox -> GetSelection();
-pending_listbox -> SetSelection(wxNOT_FOUND);
-    pending_listbox -> Delete(sel);
+            all_items.Clear();
+            compras -> DeleteAllItems();
+            pendingOrders.RemoveAt(pending_listbox -> GetSelection(),1);
+            int sel = pending_listbox -> GetSelection();
+            pending_listbox -> SetSelection(wxNOT_FOUND);
+            pending_listbox -> Delete(sel);
+        }
     }
-            }
 }
 
 
 void restaurant_posFrame::OnTextCtrl2Text(wxCommandEvent& event)
 {
-/*
-    wxString amount = TextCtrl2 -> GetValue();
-    amount.Replace(_("."), _(""));
-    if(amount.Length()>2){
-    amount.insert(amount.Length() - 2,_("."));
-        }else{
-    amount.insert(0,_("."));
-        }
+    /*
+        wxString amount = TextCtrl2 -> GetValue();
+        amount.Replace(_("."), _(""));
+        if(amount.Length()>2){
+        amount.insert(amount.Length() - 2,_("."));
+            }else{
+        amount.insert(0,_("."));
+            }
 
-//TextCtrl2 -> ChangeValue(_("hello!"));
-    TextCtrl2 -> ChangeValue(amount);
+    //TextCtrl2 -> ChangeValue(_("hello!"));
+        TextCtrl2 -> ChangeValue(amount);
 
-TextCtrl2 -> SetInsertionPointEnd();
-*/
+    TextCtrl2 -> SetInsertionPointEnd();
+    */
 }
 
 
@@ -1165,44 +1257,48 @@ void restaurant_posFrame::OnTextCtrl2TextEnter(wxCommandEvent& event)
     add_additional_item();
 }
 
-void restaurant_posFrame::add_additional_item(){
+void restaurant_posFrame::add_additional_item()
+{
     double price;
     wxString price_str = TextCtrl2->GetValue();
     price_str.ToDouble(&price);
-  double tax = 0;
-  int id_tax = taxes_array[taxes_choice->GetSelection()];
+    double tax = 0;
+    int id_tax = taxes_array[taxes_choice->GetSelection()];
     mysqlpp::Query query = conn->query();
     query << "SELECT `value` FROM `taxes` WHERE `id` = "<< id_tax <<" LIMIT 1";
     mysqlpp::StoreQueryResult res = query.store();
-    if(res){
-     mysqlpp::Row row;
-     row = res.at(0);
-     tax = double(row["value"]);
-        }
+    if(res)
+    {
+        mysqlpp::Row row;
+        row = res.at(0);
+        tax = double(row["value"]);
+    }
 
     add_to_listctrl(SpinCtrl1->GetValue(), TextCtrl1->GetValue(), tax/100, id_tax, price, TextCtrl3->GetValue(),kitchen_checkbox->GetValue());
-if(!CheckBox1->GetValue()){
-    add_additional_clear();
-}
+    if(!CheckBox1->GetValue())
+    {
+        add_additional_clear();
     }
+}
 
 void restaurant_posFrame::OnButton8Click(wxCommandEvent& event)
 {
     add_additional_item();
 }
 
-void restaurant_posFrame::add_to_listctrl(int qty, wxString name, double tax, int tax_id, double price, wxString comment, bool kitchen = false){
-        item_entry dish_to_add;
-        dish_to_add.qty = qty;
-        dish_to_add.name = name;
-        dish_to_add.tax = tax;
-        dish_to_add.tax_id = tax_id;
-        dish_to_add.price = price;
-        dish_to_add.comment = comment;
-        dish_to_add.kitchen = kitchen;
-        all_items.Add(dish_to_add);
-        //adding to listctrl
-            wxString price_str;
+void restaurant_posFrame::add_to_listctrl(int qty, wxString name, double tax, int tax_id, double price, wxString comment, bool kitchen = false)
+{
+    item_entry dish_to_add;
+    dish_to_add.qty = qty;
+    dish_to_add.name = name;
+    dish_to_add.tax = tax;
+    dish_to_add.tax_id = tax_id;
+    dish_to_add.price = price;
+    dish_to_add.comment = comment;
+    dish_to_add.kitchen = kitchen;
+    all_items.Add(dish_to_add);
+    //adding to listctrl
+    wxString price_str;
 //    price_str << dish_to_add.price;
     wxString qty_str;
     qty_str << dish_to_add.qty;
@@ -1213,8 +1309,9 @@ void restaurant_posFrame::add_to_listctrl(int qty, wxString name, double tax, in
     compras->SetItem(tmp, 1, dish_to_add.name);
     compras->SetItem(tmp, 2, addZero(dish_to_add.price));
 
-    }
-void restaurant_posFrame::refresh_taxes(){
+}
+void restaurant_posFrame::refresh_taxes()
+{
     taxes_choice -> Clear();
     taxes_array.Clear();
     mysqlpp::Query query = conn->query();
@@ -1222,22 +1319,25 @@ void restaurant_posFrame::refresh_taxes(){
     mysqlpp::StoreQueryResult res = query.store();
     if (res)
     {
-                    if (res.num_rows() != 0){
-mysqlpp::Row row;
-mysqlpp::StoreQueryResult::size_type i;
-for (i = 0; i < res.num_rows(); ++i) {
-  row = res[i];
-            std::string tax_name = std::string(row["name"]);
-            taxes_choice->Append(std2wx(tax_name, wxConvUI));
-            taxes_array.Add(int(row["id"]));
+        if (res.num_rows() != 0)
+        {
+            mysqlpp::Row row;
+            mysqlpp::StoreQueryResult::size_type i;
+            for (i = 0; i < res.num_rows(); ++i)
+            {
+                row = res[i];
+                std::string tax_name = std::string(row["name"]);
+                taxes_choice->Append(std2wx(tax_name, wxConvUI));
+                taxes_array.Add(int(row["id"]));
+            }
         }
-                    }
     }
     taxes_choice->SetSelection(0);
 
-    }
+}
 
-void restaurant_posFrame::refresh_waiters(){
+void restaurant_posFrame::refresh_waiters()
+{
     waiter_choice -> Clear();
     workers_ids.Clear();
     mysqlpp::Query query = conn -> query();
@@ -1245,101 +1345,120 @@ void restaurant_posFrame::refresh_waiters(){
     mysqlpp::StoreQueryResult res = query.store();
     if (res)
     {
-        if (res.num_rows() != 0){
-        mysqlpp::Row row;
-        mysqlpp::StoreQueryResult::size_type i;
-        for (i = 0; i < res.num_rows(); ++i) {
-        row = res[i];
-
-                          if(int(row["show"]) == 1){
-         waiter_choice->Append(std2wx(std::string(row["name"]),wxConvUI));
-         workers_ids.Add(int(row["id"]));
-                    }
-        }
-        }
-    }
-    waiter_choice->SetSelection(0);
-
-    }
-
-void  restaurant_posFrame::refresh_menus(){
-    menus_show.Clear();
-        mysqlpp::Query query = conn->query();
-        query << "SELECT * FROM `menus`";
-        mysqlpp::StoreQueryResult res = query.store();
-          if (res)
+        if (res.num_rows() != 0)
         {
-            if (res.num_rows() != 0){
-mysqlpp::Row row;
-mysqlpp::StoreQueryResult::size_type i;
-for (i = 0; i < res.num_rows(); ++i) {
-  row = res[i];
-                if(int(row["show"]) == 1){
-                    menus_show.Add(int(row["id"]));
-                    }
+            mysqlpp::Row row;
+            mysqlpp::StoreQueryResult::size_type i;
+            for (i = 0; i < res.num_rows(); ++i)
+            {
+                row = res[i];
+
+                if(int(row["show"]) == 1)
+                {
+                    waiter_choice->Append(std2wx(std::string(row["name"]),wxConvUI));
+                    workers_ids.Add(int(row["id"]));
                 }
             }
         }
     }
+    waiter_choice->SetSelection(0);
 
-void restaurant_posFrame::refresh_kitchen(){
-if(set_now.kitchen && set_now.kitchen_type ==1){
-    if(!server_started){
-server_started = startServer();
-    }
-    if(server_started){
-    TextCtrl4->Enable(true);
-    TextCtrl5->Enable(true);
-    Button6->Enable(true);
-    Button9->Enable(true);
-    }
-    Button10->Enable(false);
-}else{
-    TextCtrl4->Enable(false);
-    TextCtrl5->Enable(false);
-    Button6->Enable(false);
-    Button9->Enable(false);
-    StatusBar1->SetStatusText(_(""), 1);
-    if(set_now.kitchen && set_now.kitchen_type ==2){
-    Button10->Enable(true);
-        }else{
-    Button10->Enable(false);
-        }
 }
-    }
 
-void restaurant_posFrame::add_additional_clear(){
+void  restaurant_posFrame::refresh_menus()
+{
+    menus_show.Clear();
+    mysqlpp::Query query = conn->query();
+    query << "SELECT * FROM `menus`";
+    mysqlpp::StoreQueryResult res = query.store();
+    if (res)
+    {
+        if (res.num_rows() != 0)
+        {
+            mysqlpp::Row row;
+            mysqlpp::StoreQueryResult::size_type i;
+            for (i = 0; i < res.num_rows(); ++i)
+            {
+                row = res[i];
+                if(int(row["show"]) == 1)
+                {
+                    menus_show.Add(int(row["id"]));
+                }
+            }
+        }
+    }
+}
+
+void restaurant_posFrame::refresh_kitchen()
+{
+    if(set_now.kitchen && set_now.kitchen_type ==1)
+    {
+        if(!server_started)
+        {
+            server_started = startServer();
+        }
+        if(server_started)
+        {
+            TextCtrl4->Enable(true);
+            TextCtrl5->Enable(true);
+            Button6->Enable(true);
+            Button9->Enable(true);
+        }
+        Button10->Enable(false);
+    }
+    else
+    {
+        TextCtrl4->Enable(false);
+        TextCtrl5->Enable(false);
+        Button6->Enable(false);
+        Button9->Enable(false);
+        StatusBar1->SetStatusText(_(""), 1);
+        if(set_now.kitchen && set_now.kitchen_type ==2)
+        {
+            Button10->Enable(true);
+        }
+        else
+        {
+            Button10->Enable(false);
+        }
+    }
+}
+
+void restaurant_posFrame::add_additional_clear()
+{
     SpinCtrl1->SetValue(1);
     TextCtrl1->Clear();
     TextCtrl2->Clear();
     TextCtrl3->Clear();
     taxes_choice->SetSelection(0);
     kitchen_checkbox->SetValue(false);
-    }
+}
 
 void restaurant_posFrame::OncomprasItemSelect(wxListEvent& event)
 {
     item_to_change = event.m_itemIndex;
-   SpinCtrl1->SetValue(all_items[item_to_change].qty);
-   TextCtrl1->ChangeValue(all_items[item_to_change].name);
-   TextCtrl2->ChangeValue(addZero(all_items[item_to_change].price));
-TextCtrl3->ChangeValue(all_items[item_to_change].comment);
-kitchen_checkbox->SetValue(all_items[item_to_change].kitchen);
-    for(int i=0; i < taxes_array.GetCount(); i++){
-        if(all_items[item_to_change].tax_id == taxes_array[i]){
-        taxes_choice->SetSelection(i);
-             break;
-             }
-
+    SpinCtrl1->SetValue(all_items[item_to_change].qty);
+    TextCtrl1->ChangeValue(all_items[item_to_change].name);
+    TextCtrl2->ChangeValue(addZero(all_items[item_to_change].price));
+    TextCtrl3->ChangeValue(all_items[item_to_change].comment);
+    kitchen_checkbox->SetValue(all_items[item_to_change].kitchen);
+    for(int i=0; i < taxes_array.GetCount(); i++)
+    {
+        if(all_items[item_to_change].tax_id == taxes_array[i])
+        {
+            taxes_choice->SetSelection(i);
+            break;
         }
+
+    }
 
 }
 
 void restaurant_posFrame::Onchange_buttonClick(wxCommandEvent& event)
 {
-        compras->DeleteItem(item_to_change);
-        all_items.RemoveAt(item_to_change,1);
-        add_additional_item();
+    compras->DeleteItem(item_to_change);
+    all_items.RemoveAt(item_to_change,1);
+    add_additional_item();
 }
 
 void restaurant_posFrame::Onclear_buttonClick(wxCommandEvent& event)
@@ -1354,8 +1473,8 @@ void restaurant_posFrame::OnMenuItem4Selected1(wxCommandEvent& event)
     display_dlg->fill_all();
     display_dlg->ShowModal();
 
-refresh_waiters();
-refresh_menus();
+    refresh_waiters();
+    refresh_menus();
 }
 
 void restaurant_posFrame::OnMenuItem7Selected(wxCommandEvent& event)
@@ -1378,79 +1497,94 @@ void restaurant_posFrame::OnMenuStatisticsSelected(wxCommandEvent& event)
 
 void restaurant_posFrame::OnButton9Click(wxCommandEvent& event)
 {
-        if(all_items.GetCount()!=0){ //this means we have some item to send - order is not empty ;)
-    if(pending_listbox -> GetSelection() == wxNOT_FOUND){ //this means those items are not saved
-save_order();
-    }
+    if(all_items.GetCount()!=0)  //this means we have some item to send - order is not empty ;)
+    {
+        if(pending_listbox -> GetSelection() == wxNOT_FOUND)  //this means those items are not saved
+        {
+            save_order();
+        }
 
-           int ind;
-               if(pending_listbox -> GetSelection() != wxNOT_FOUND){
-           ind = pendingOrders[pending_listbox->GetSelection()].id;
-               }else{
-           ind = pendingOrders[pending_listbox->GetCount()-1].id;
-                    }
+        int ind;
+        if(pending_listbox -> GetSelection() != wxNOT_FOUND)
+        {
+            ind = pendingOrders[pending_listbox->GetSelection()].id;
+        }
+        else
+        {
+            ind = pendingOrders[pending_listbox->GetCount()-1].id;
+        }
         mysqlpp::Query query = conn->query(); //status '3' means order needed to be prepared in kitchen
         query << "UPDATE `orders` SET `status` = '3' WHERE `id` = "<< ind <<" LIMIT 1";
         query.execute();
 //sending message to the kitchen that we hawe new order:
 //if (Socketserver1->IsConnected()){
-sendMessage(_T("n:"));
+        sendMessage(_T("n:"));
 //}
 
         clear_order();
         add_additional_clear();
-}
+    }
 }
 
-void restaurant_posFrame::sendMessage(wxString toSend){
-if (Socketserver1->IsConnected()){
-    unsigned char c = 0xBE; //start to send message to the kitchen
-    sockAccepted->Write(&c, 1);
-    sockAccepted->SetFlags(wxSOCKET_WAITALL);
-    const wxChar *buf;
-    unsigned char len;
-    buf = toSend.c_str();
-    len  = (unsigned char)((wxStrlen(buf) + 1) * sizeof(wxChar));
-    sockAccepted->Write(&len, 1);
-    sockAccepted->Write(buf, len);
-}
+void restaurant_posFrame::sendMessage(wxString toSend)
+{
+    if (Socketserver1->IsConnected())
+    {
+        unsigned char c = 0xBE; //start to send message to the kitchen
+        sockAccepted->Write(&c, 1);
+        sockAccepted->SetFlags(wxSOCKET_WAITALL);
+        const wxChar *buf;
+        unsigned char len;
+        buf = toSend.c_str();
+        len  = (unsigned char)((wxStrlen(buf) + 1) * sizeof(wxChar));
+        sockAccepted->Write(&len, 1);
+        sockAccepted->Write(buf, len);
     }
+}
 
 void restaurant_posFrame::OnButton6Click(wxCommandEvent& event)
 {
     wxString message = TextCtrl5 -> GetValue();
-    if (Socketserver1->IsConnected()){
-    TextCtrl5 -> Clear();
-    sendMessage(_T("m:") + message);
-    TextCtrl4 -> AppendText(_("POS: ") + message + _T("\n"));
-    }else{
-    wxMessageBox(_T("Kitchen computer is not connected!\n Message was not sent."));
-        }
+    if (Socketserver1->IsConnected())
+    {
+        TextCtrl5 -> Clear();
+        sendMessage(_T("m:") + message);
+        TextCtrl4 -> AppendText(_("POS: ") + message + _T("\n"));
+    }
+    else
+    {
+        wxMessageBox(_T("Kitchen computer is not connected!\n Message was not sent."));
+    }
 }
 
 void restaurant_posFrame::OnButton10Click(wxCommandEvent& event)
 {
-           if(all_items.GetCount()!=0){ //this means we have some item to send - order is not empty ;)
-    if(pending_listbox -> GetSelection() == wxNOT_FOUND){ //this means those items are not saved
-save_order();
-    }
+    if(all_items.GetCount()!=0)  //this means we have some item to send - order is not empty ;)
+    {
+        if(pending_listbox -> GetSelection() == wxNOT_FOUND)  //this means those items are not saved
+        {
+            save_order();
+        }
 
-           int ind;
-               if(pending_listbox -> GetSelection() != wxNOT_FOUND){
-           ind = pendingOrders[pending_listbox->GetSelection()].id;
-               }else{
-           ind = pendingOrders[pending_listbox->GetCount()-1].id;
-                    }
+        int ind;
+        if(pending_listbox -> GetSelection() != wxNOT_FOUND)
+        {
+            ind = pendingOrders[pending_listbox->GetSelection()].id;
+        }
+        else
+        {
+            ind = pendingOrders[pending_listbox->GetCount()-1].id;
+        }
 
         if(printTicket(formatTicket(ind, conn), set_now.ticket_command, set_now.custom_ticket ) == 1)
         {
-        mysqlpp::Query query = conn->query(); //status '5' means order has been printed
-        query << "UPDATE `orders` SET `status` = '5' WHERE `id` = "<< ind <<" LIMIT 1";
-        query.execute();
+            mysqlpp::Query query = conn->query(); //status '5' means order has been printed
+            query << "UPDATE `orders` SET `status` = '5' WHERE `id` = "<< ind <<" LIMIT 1";
+            query.execute();
         }
 
 
         clear_order();
         add_additional_clear();
-}
+    }
 }

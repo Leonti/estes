@@ -1,3 +1,21 @@
+/*************************************************************************************
+*  Estes - Restaurant Point Of Sale                                                  *
+*  Copyright (C) 2009  Leonti Bielski                                                *
+*                                                                                    *
+*  This program is free software; you can redistribute it and/or modify              *
+*  it under the terms of the GNU General Public License as published by              *
+*  the Free Software Foundation; either version 2 of the License, or                 *
+*  (at your option) any later version.                                               *
+*                                                                                    *
+*  This program is distributed in the hope that it will be useful,                   *
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of                    *
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                     *
+*  GNU General Public License for more details.                                      *
+*                                                                                    *
+*  You should have received a copy of the GNU General Public License                 *
+*  along with this program; if not, write to the Free Software                       *
+*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA    *
+*************************************************************************************/
 #include "editmenu.h"
 #include "wx_std.h"
 #include <wx/msgdlg.h>
@@ -287,9 +305,11 @@ void editmenu::Ongroup_listboxSelect(wxCommandEvent& event)
     {
         groups_textctrl->AppendText(group_listbox->GetString(selections[0]));
         group_choice->SetSelection(selections[0]);
-    }else{
+    }
+    else
+    {
         group_choice->SetSelection(0);
-        }
+    }
 
     refresh_ingridient();
 
@@ -329,22 +349,23 @@ void editmenu::Onadd_group_buttonClick(wxCommandEvent& event)
 void editmenu::Onrename_group_buttonClick(wxCommandEvent& event)
 {
     wxArrayInt temp;
-if(group_listbox->GetSelections(temp) != 0){
-
-    if (!groups_textctrl->IsEmpty())
+    if(group_listbox->GetSelections(temp) != 0)
     {
 
-        wxArrayInt selections;
-        group_listbox->GetSelections(selections);
+        if (!groups_textctrl->IsEmpty())
+        {
 
-        mysqlpp::Query query = conn_edit -> query();
-        query << "UPDATE `groups` SET `name` = '" << wx2std(groups_textctrl->GetValue(), wxConvUI) << "' WHERE `groups`.`name` ='"<< wx2std(group_listbox->GetString(selections[0]), wxConvUI) <<"' LIMIT 1";
-        query.execute();
+            wxArrayInt selections;
+            group_listbox->GetSelections(selections);
 
-        refresh_group();
-        groups_textctrl->Clear();
+            mysqlpp::Query query = conn_edit -> query();
+            query << "UPDATE `groups` SET `name` = '" << wx2std(groups_textctrl->GetValue(), wxConvUI) << "' WHERE `groups`.`name` ='"<< wx2std(group_listbox->GetString(selections[0]), wxConvUI) <<"' LIMIT 1";
+            query.execute();
+
+            refresh_group();
+            groups_textctrl->Clear();
+        }
     }
-}
 }
 
 void editmenu::Ondelete_group_buttonClick(wxCommandEvent& event)
@@ -358,23 +379,25 @@ void editmenu::Ondelete_group_buttonClick(wxCommandEvent& event)
         query << "DELETE FROM `groups` WHERE `id` = '"<<  group_id <<"'";
         query.execute();
 
-     query << "SELECT `id` FROM `parts` WHERE `group_id` = '" << group_id << "'";
-     mysqlpp::StoreQueryResult res = query.store();
-    if (res)
-    {
-            if (res.num_rows() != 0){
-mysqlpp::Row row;
-mysqlpp::StoreQueryResult::size_type i;
-for (i = 0; i < res.num_rows(); ++i) {
-  row = res[i];
-            int part_id = int(row["id"]);
-                query << "DELETE FROM `dishes_parts` WHERE `parts_id` = '"<<  part_id <<"'";
-                query.execute();
-                query << "DELETE FROM `dishes_parts_ors` WHERE `parts_id` = '"<<  part_id <<"'";
-                query.execute();
-                        }
-            }
+        query << "SELECT `id` FROM `parts` WHERE `group_id` = '" << group_id << "'";
+        mysqlpp::StoreQueryResult res = query.store();
+        if (res)
+        {
+            if (res.num_rows() != 0)
+            {
+                mysqlpp::Row row;
+                mysqlpp::StoreQueryResult::size_type i;
+                for (i = 0; i < res.num_rows(); ++i)
+                {
+                    row = res[i];
+                    int part_id = int(row["id"]);
+                    query << "DELETE FROM `dishes_parts` WHERE `parts_id` = '"<<  part_id <<"'";
+                    query.execute();
+                    query << "DELETE FROM `dishes_parts_ors` WHERE `parts_id` = '"<<  part_id <<"'";
+                    query.execute();
                 }
+            }
+        }
         query << "DELETE FROM `parts` WHERE `group_id` = '"<<  group_id <<"'";
         query.execute();
     }
@@ -395,18 +418,20 @@ void editmenu::refresh_group(void)
     mysqlpp::StoreQueryResult res = query.store();
     if (res)
     {
-            if (res.num_rows() != 0){
-mysqlpp::Row row;
-mysqlpp::StoreQueryResult::size_type i;
-for (i = 0; i < res.num_rows(); ++i) {
-  row = res[i];
-            std::string group_name = std::string(row["name"]);
-            group_listbox->Append(std2wx(group_name, wxConvUI));
-            group_choice->Append(std2wx(group_name, wxConvUI));
-            group_array.Add(int(row["id"]));
+        if (res.num_rows() != 0)
+        {
+            mysqlpp::Row row;
+            mysqlpp::StoreQueryResult::size_type i;
+            for (i = 0; i < res.num_rows(); ++i)
+            {
+                row = res[i];
+                std::string group_name = std::string(row["name"]);
+                group_listbox->Append(std2wx(group_name, wxConvUI));
+                group_choice->Append(std2wx(group_name, wxConvUI));
+                group_array.Add(int(row["id"]));
 
-        }
             }
+        }
     }
 
     //        }
@@ -462,43 +487,47 @@ void editmenu::refresh_ingridient(void)
         mysqlpp::StoreQueryResult res = query.store();
         if (res)
         {
-            if (res.num_rows() != 0){
-mysqlpp::Row row;
-mysqlpp::StoreQueryResult::size_type i;
-for (i = 0; i < res.num_rows(); ++i) {
-  row = res[i];
-                std::string ing_name = std::string(row["name"]);
-                ing_listbox->Append(std2wx(ing_name, wxConvUI));
-                ing_array.Add(int(row["id"]));
-                ing_gr_array.Add(int(row["group_id"]));
-            }
+            if (res.num_rows() != 0)
+            {
+                mysqlpp::Row row;
+                mysqlpp::StoreQueryResult::size_type i;
+                for (i = 0; i < res.num_rows(); ++i)
+                {
+                    row = res[i];
+                    std::string ing_name = std::string(row["name"]);
+                    ing_listbox->Append(std2wx(ing_name, wxConvUI));
+                    ing_array.Add(int(row["id"]));
+                    ing_gr_array.Add(int(row["group_id"]));
+                }
             }
         }
 
     }
-ing_textctrl->Clear();
-price_change_textctrl->Clear();
+    ing_textctrl->Clear();
+    price_change_textctrl->Clear();
 //    group_choice->SetSelection(0);
 }
 
 void editmenu::Oning_listboxSelect(wxCommandEvent& event)
 {
-if(ing_listbox->GetSelection() != wxNOT_FOUND){
-    ing_textctrl->Clear();
-    ing_textctrl->AppendText(ing_listbox->GetStringSelection());
+    if(ing_listbox->GetSelection() != wxNOT_FOUND)
+    {
+        ing_textctrl->Clear();
+        ing_textctrl->AppendText(ing_listbox->GetStringSelection());
 
 
-int i=0;
-for(i; i< group_array.GetCount(); i++){
-    if(ing_gr_array[ing_listbox->GetSelection()] == group_array[i]) break;
-    }
+        int i=0;
+        for(i; i< group_array.GetCount(); i++)
+        {
+            if(ing_gr_array[ing_listbox->GetSelection()] == group_array[i]) break;
+        }
 
 //    int i = 0;
 //    while (group_array[i] != ing_gr_array[ing_listbox->GetSelection()])
 //        i++;
 
 
-    group_choice->SetSelection(i);
+        group_choice->SetSelection(i);
 
         mysqlpp::Query query = conn_edit->query();
         query << "SELECT * FROM `parts` WHERE `id`=" << ing_array[ing_listbox -> GetSelection()];
@@ -506,12 +535,13 @@ for(i; i< group_array.GetCount(); i++){
 
         if (res)
         {
-            if (res.num_rows() != 0){
-            mysqlpp::Row row = res.at(0);
-            price_change_textctrl -> Clear();
-            price_change_textctrl -> AppendText(std2wx(std::string(row["price_change"]),wxConvUI));
+            if (res.num_rows() != 0)
+            {
+                mysqlpp::Row row = res.at(0);
+                price_change_textctrl -> Clear();
+                price_change_textctrl -> AppendText(std2wx(std::string(row["price_change"]),wxConvUI));
             }
-            }
+        }
 
 
 
@@ -521,53 +551,58 @@ for(i; i< group_array.GetCount(); i++){
 
 
 
-    if(parts_listbox->GetSelection() != wxNOT_FOUND){
-    or_button -> Enable();
+        if(parts_listbox->GetSelection() != wxNOT_FOUND)
+        {
+            or_button -> Enable();
+        }
+        if(menu_in_listbox->GetSelection() != wxNOT_FOUND)
+        {
+            move_button -> Enable();
+        }
+
     }
-   if(menu_in_listbox->GetSelection() != wxNOT_FOUND){
-    move_button -> Enable();
-    }
-
-}
 }
 
 void editmenu::Ondelete_ing_buttonClick(wxCommandEvent& event)
 {
-if(ing_listbox->GetSelection() != wxNOT_FOUND){
-    mysqlpp::Query query = conn_edit -> query();
-    int part_id = ing_array[ing_listbox->GetSelection()];
-    query << "DELETE FROM `parts` WHERE `parts`.`id` = " << part_id;
-    query.execute();
-                query << "DELETE FROM `dishes_parts` WHERE `parts_id` = '"<<  part_id <<"'";
-                query.execute();
-                query << "DELETE FROM `dishes_parts_ors` WHERE `parts_id` = '"<<  part_id <<"'";
-                query.execute();
+    if(ing_listbox->GetSelection() != wxNOT_FOUND)
+    {
+        mysqlpp::Query query = conn_edit -> query();
+        int part_id = ing_array[ing_listbox->GetSelection()];
+        query << "DELETE FROM `parts` WHERE `parts`.`id` = " << part_id;
+        query.execute();
+        query << "DELETE FROM `dishes_parts` WHERE `parts_id` = '"<<  part_id <<"'";
+        query.execute();
+        query << "DELETE FROM `dishes_parts_ors` WHERE `parts_id` = '"<<  part_id <<"'";
+        query.execute();
 
 
-    refresh_ingridient();
-}
+        refresh_ingridient();
+    }
 }
 
 void editmenu::Onrename_ing_buttonClick(wxCommandEvent& event)
 {
 
-if(ing_listbox->GetSelection() != wxNOT_FOUND){
-    if (!ing_textctrl->IsEmpty())
+    if(ing_listbox->GetSelection() != wxNOT_FOUND)
     {
+        if (!ing_textctrl->IsEmpty())
+        {
 
-        mysqlpp::Query query = conn_edit -> query();
-        query << "UPDATE `parts` SET `price_change` = '"<< wx2std(price_change_textctrl->GetValue(), wxConvUI) <<"', `name` = '"<<wx2std(ing_textctrl->GetValue(), wxConvUI)<<"', `group_id` = '"<<group_array[group_choice->GetSelection()]<<"' WHERE `parts`.`id` = "<< ing_array[ing_listbox->GetSelection()] <<" LIMIT 1;";
-        query.execute();
+            mysqlpp::Query query = conn_edit -> query();
+            query << "UPDATE `parts` SET `price_change` = '"<< wx2std(price_change_textctrl->GetValue(), wxConvUI) <<"', `name` = '"<<wx2std(ing_textctrl->GetValue(), wxConvUI)<<"', `group_id` = '"<<group_array[group_choice->GetSelection()]<<"' WHERE `parts`.`id` = "<< ing_array[ing_listbox->GetSelection()] <<" LIMIT 1;";
+            query.execute();
 
 
-        refresh_ingridient();
-        ing_textctrl->Clear();
+            refresh_ingridient();
+            ing_textctrl->Clear();
+        }
     }
-}
 
 }
 
-void editmenu::refresh_menu(void){
+void editmenu::refresh_menu(void)
+{
 
     menu_listbox->Clear();
     menu_choice->Clear();
@@ -580,26 +615,28 @@ void editmenu::refresh_menu(void){
     mysqlpp::StoreQueryResult res = query.store();
     if (res)
     {
-            if (res.num_rows() != 0){
-mysqlpp::Row row;
-mysqlpp::StoreQueryResult::size_type i;
-for (i = 0; i < res.num_rows(); ++i) {
-  row = res[i];
-            std::string menu_name = std::string(row["name"]);
-            wxString menu_nm = std2wx(menu_name, wxConvUI);
-            menu_listbox->Append(menu_nm);
-            menu_choice->Append(menu_nm);
-            menu_array.Add(int(row["id"]));
-            taxes_menu_ids.Add(int(row["tax_id"]));
-            kitchens.Add(int(row["kitchen"]));
-        }
+        if (res.num_rows() != 0)
+        {
+            mysqlpp::Row row;
+            mysqlpp::StoreQueryResult::size_type i;
+            for (i = 0; i < res.num_rows(); ++i)
+            {
+                row = res[i];
+                std::string menu_name = std::string(row["name"]);
+                wxString menu_nm = std2wx(menu_name, wxConvUI);
+                menu_listbox->Append(menu_nm);
+                menu_choice->Append(menu_nm);
+                menu_array.Add(int(row["id"]));
+                taxes_menu_ids.Add(int(row["tax_id"]));
+                kitchens.Add(int(row["kitchen"]));
             }
+        }
     }
-menu_choice->SetSelection(0);
-taxes_choice->SetSelection(0);
-kitchen_by_default->SetValue(true);
-dish_kitchen->SetValue(true);
-    }
+    menu_choice->SetSelection(0);
+    taxes_choice->SetSelection(0);
+    kitchen_by_default->SetValue(true);
+    dish_kitchen->SetValue(true);
+}
 
 void editmenu::fill_all(void)
 {
@@ -612,21 +649,22 @@ void editmenu::fill_all(void)
 
 void editmenu::Onrename_in_menu_buttonClick(wxCommandEvent& event)
 {
-    if(menu_in_listbox->GetSelection() != wxNOT_FOUND){
-
-    if (!menu_in_textctrl->IsEmpty())
+    if(menu_in_listbox->GetSelection() != wxNOT_FOUND)
     {
-int kitchen = 1;
-if(!dish_kitchen->GetValue()) kitchen = 0;
 
-        mysqlpp::Query query = conn_edit -> query();
-        query << "UPDATE `dishes` SET `menu_id` = "<< menu_array[menu_choice->GetSelection()] <<" ,`name` = '" << wx2std(menu_in_textctrl->GetValue(), wxConvUI) << "', `kitchen` = '"<< kitchen <<"' WHERE `dishes`.`name` ='"<< wx2std(menu_in_listbox->GetStringSelection(), wxConvUI) <<"' LIMIT 1";
-        query.execute();
+        if (!menu_in_textctrl->IsEmpty())
+        {
+            int kitchen = 1;
+            if(!dish_kitchen->GetValue()) kitchen = 0;
 
-        refresh_menu_in();
-        menu_in_textctrl->Clear();
+            mysqlpp::Query query = conn_edit -> query();
+            query << "UPDATE `dishes` SET `menu_id` = "<< menu_array[menu_choice->GetSelection()] <<" ,`name` = '" << wx2std(menu_in_textctrl->GetValue(), wxConvUI) << "', `kitchen` = '"<< kitchen <<"' WHERE `dishes`.`name` ='"<< wx2std(menu_in_listbox->GetStringSelection(), wxConvUI) <<"' LIMIT 1";
+            query.execute();
+
+            refresh_menu_in();
+            menu_in_textctrl->Clear();
+        }
     }
-}
 }
 
 void editmenu::Onmenu_listboxSelect(wxCommandEvent& event)
@@ -634,31 +672,35 @@ void editmenu::Onmenu_listboxSelect(wxCommandEvent& event)
     menu_textctrl->Clear();
     menu_textctrl->AppendText(menu_listbox->GetStringSelection());
 
-for(int i=0; i< taxes_array.GetCount(); i++){
-    if(taxes_menu_ids[menu_listbox->GetSelection()] == taxes_array[i]){
-        taxes_choice -> SetSelection(i);
-         break;
-         }
+    for(int i=0; i< taxes_array.GetCount(); i++)
+    {
+        if(taxes_menu_ids[menu_listbox->GetSelection()] == taxes_array[i])
+        {
+            taxes_choice -> SetSelection(i);
+            break;
+        }
     }
 
 
     menu_choice -> SetSelection(menu_listbox->GetSelection());
 
-    if(kitchens[menu_listbox->GetSelection()]==1){
-           kitchen_by_default->SetValue(true);
-           dish_kitchen->SetValue(true);
-           }
-            else{
-            kitchen_by_default->SetValue(false);
-            dish_kitchen->SetValue(false);
-            }
+    if(kitchens[menu_listbox->GetSelection()]==1)
+    {
+        kitchen_by_default->SetValue(true);
+        dish_kitchen->SetValue(true);
+    }
+    else
+    {
+        kitchen_by_default->SetValue(false);
+        dish_kitchen->SetValue(false);
+    }
 
 //    int i = 0;
 //    while (taxes_array[i] != taxes_menu_ids[menu_listbox->GetSelection()])
 //        i++;
 
 
- //   group_choice->SetSelection(i);
+//   group_choice->SetSelection(i);
 
     move_button -> Disable();
     or_button -> Disable();
@@ -684,18 +726,21 @@ void editmenu::Onadd_menu_buttonClick(wxCommandEvent& event)
         }
         if (exist == 0)
         {
-            if(taxes_array.GetCount() != 0){ //checking for taxes
-int kitchen = 1;
-if(!kitchen_by_default->GetValue()) kitchen = 0;
+            if(taxes_array.GetCount() != 0)  //checking for taxes
+            {
+                int kitchen = 1;
+                if(!kitchen_by_default->GetValue()) kitchen = 0;
 
-            mysqlpp::Query query = conn_edit -> query();
-            query << "INSERT INTO `menus` (`id`, `name`, `tax_id`, `kitchen`) VALUES (NULL, '" << wx2std(menu_textctrl->GetValue(), wxConvUI) << "', '"<< taxes_array[taxes_choice->GetSelection()] <<"', '"<< kitchen <<"')";
-            query.execute();
+                mysqlpp::Query query = conn_edit -> query();
+                query << "INSERT INTO `menus` (`id`, `name`, `tax_id`, `kitchen`) VALUES (NULL, '" << wx2std(menu_textctrl->GetValue(), wxConvUI) << "', '"<< taxes_array[taxes_choice->GetSelection()] <<"', '"<< kitchen <<"')";
+                query.execute();
 
-            refresh_menu();
-            menu_textctrl->Clear();
-            }else{
-wxMessageBox(_("Please create tax group first!"));
+                refresh_menu();
+                menu_textctrl->Clear();
+            }
+            else
+            {
+                wxMessageBox(_("Please create tax group first!"));
             }
         }
 
@@ -706,63 +751,69 @@ wxMessageBox(_("Please create tax group first!"));
 
 void editmenu::Ondelete_menu_buttonClick(wxCommandEvent& event)
 {
-    if(menu_listbox->GetSelection() != wxNOT_FOUND){
+    if(menu_listbox->GetSelection() != wxNOT_FOUND)
+    {
 
-    int menu_id = menu_array[menu_listbox->GetSelection()];
-    mysqlpp::Query query = conn_edit -> query();
-    query << "DELETE FROM `menus` WHERE `menus`.`id` = " << menu_id;
-    query.execute();
+        int menu_id = menu_array[menu_listbox->GetSelection()];
+        mysqlpp::Query query = conn_edit -> query();
+        query << "DELETE FROM `menus` WHERE `menus`.`id` = " << menu_id;
+        query.execute();
 
         query << "SELECT `id` FROM `dishes` WHERE `menu_id`=" << menu_id;
         mysqlpp::StoreQueryResult res = query.store();
         if (res)
         {
-            if (res.num_rows() != 0){
-mysqlpp::Row row;
-mysqlpp::StoreQueryResult::size_type i;
-for (i = 0; i < res.num_rows(); ++i) {
-  row = res[i];
-               delete_parts_from_dish(int(row["id"]));
+            if (res.num_rows() != 0)
+            {
+                mysqlpp::Row row;
+                mysqlpp::StoreQueryResult::size_type i;
+                for (i = 0; i < res.num_rows(); ++i)
+                {
+                    row = res[i];
+                    delete_parts_from_dish(int(row["id"]));
                 }
             }
-            }
-    query << "DELETE FROM `dishes` WHERE `menu_id` = " << menu_id;
-    query.execute();
+        }
+        query << "DELETE FROM `dishes` WHERE `menu_id` = " << menu_id;
+        query.execute();
 
-    refresh_menu();
-    //refresh_menu_in();
+        refresh_menu();
+        //refresh_menu_in();
     }
 }
 
-void editmenu::delete_parts_from_dish(int dish_id){
+void editmenu::delete_parts_from_dish(int dish_id)
+{
 
-        mysqlpp::Query query = conn_edit->query();
-        query << "SELECT * FROM `dishes_parts` WHERE `dishes_id`=" << dish_id;
-        mysqlpp::StoreQueryResult res = query.store();
-        if (res)
+    mysqlpp::Query query = conn_edit->query();
+    query << "SELECT * FROM `dishes_parts` WHERE `dishes_id`=" << dish_id;
+    mysqlpp::StoreQueryResult res = query.store();
+    if (res)
+    {
+        if (res.num_rows() != 0)
         {
-            if (res.num_rows() != 0){
-mysqlpp::Row row;
-mysqlpp::StoreQueryResult::size_type i;
-for (i = 0; i < res.num_rows(); ++i) {
-  row = res[i];
+            mysqlpp::Row row;
+            mysqlpp::StoreQueryResult::size_type i;
+            for (i = 0; i < res.num_rows(); ++i)
+            {
+                row = res[i];
                 if(int(row["parts_id"]) == 0)
-                 query << "DELETE FROM `dishes_parts_ors` WHERE `dishes_parts_id` = " << int(row["id"]);
-                 query.execute();
-                }
+                    query << "DELETE FROM `dishes_parts_ors` WHERE `dishes_parts_id` = " << int(row["id"]);
+                query.execute();
             }
-            }
-                 query << "DELETE FROM `dishes_parts` WHERE `dishes_id` = " << dish_id;
-                 query.execute();
-
+        }
     }
+    query << "DELETE FROM `dishes_parts` WHERE `dishes_id` = " << dish_id;
+    query.execute();
+
+}
 
 void editmenu::Onrename_menu_buttonClick(wxCommandEvent& event)
 {
-       if (!menu_textctrl->IsEmpty())
+    if (!menu_textctrl->IsEmpty())
     {
-int kitchen = 1;
-if(!kitchen_by_default->GetValue()) kitchen = 0;
+        int kitchen = 1;
+        if(!kitchen_by_default->GetValue()) kitchen = 0;
         mysqlpp::Query query = conn_edit -> query();
         query << "UPDATE `menus` SET `name` = '"<<wx2std(menu_textctrl->GetValue(), wxConvUI)<<"' , `tax_id` = " << taxes_array[taxes_choice -> GetSelection()] << ", `kitchen` = '"<< kitchen <<"' WHERE `menus`.`id` = "<< menu_array[menu_listbox->GetSelection()] <<" LIMIT 1;";
         query.execute();
@@ -776,58 +827,67 @@ if(!kitchen_by_default->GetValue()) kitchen = 0;
 
 }
 
-void editmenu::refresh_menu_in(void){
+void editmenu::refresh_menu_in(void)
+{
 
 //         wxMessageBox(_("preved!"));
     menu_in_textctrl->Clear();
     parts_listbox->Clear();
     price_textctrl->Clear();
 
-        menu_in_listbox->Clear();
+    menu_in_listbox->Clear();
 
-        menu_in_array.Clear();
+    menu_in_array.Clear();
 
 
 
-        mysqlpp::Query query = conn_edit->query();
-        query << "SELECT * FROM `dishes` WHERE `menu_id`=" << menu_array[menu_listbox->GetSelection()];
-        mysqlpp::StoreQueryResult res = query.store();
-        if (res)
+    mysqlpp::Query query = conn_edit->query();
+    query << "SELECT * FROM `dishes` WHERE `menu_id`=" << menu_array[menu_listbox->GetSelection()];
+    mysqlpp::StoreQueryResult res = query.store();
+    if (res)
+    {
+        if (res.num_rows() != 0)
         {
-            if (res.num_rows() != 0){
-mysqlpp::Row row;
-mysqlpp::StoreQueryResult::size_type i;
-for (i = 0; i < res.num_rows(); ++i) {
-  row = res[i];
+            mysqlpp::Row row;
+            mysqlpp::StoreQueryResult::size_type i;
+            for (i = 0; i < res.num_rows(); ++i)
+            {
+                row = res[i];
                 std::string dish_name = std::string(row["name"]);
                 menu_in_listbox->Append(std2wx(dish_name, wxConvUI));
                 menu_in_array.Add(int(row["id"]));
             }
-            }
         }
-if(kitchens[menu_listbox->GetSelection()]){
-   dish_kitchen->SetValue(true);
-    }else{
-  dish_kitchen->SetValue(false);
-        }
-
+    }
+    if(kitchens[menu_listbox->GetSelection()])
+    {
+        dish_kitchen->SetValue(true);
+    }
+    else
+    {
+        dish_kitchen->SetValue(false);
     }
 
-void editmenu::fill_parts(int dish_id){
+}
 
- parts_listbox->Clear();
- partes_array.Clear();
+void editmenu::fill_parts(int dish_id)
+{
 
-        mysqlpp::Query query = conn_edit->query();
-        query << "SELECT * FROM `dishes_parts` WHERE `dishes_id`=" << dish_id;
-        mysqlpp::StoreQueryResult res = query.store();
-       if (res)
+    parts_listbox->Clear();
+    partes_array.Clear();
+
+    mysqlpp::Query query = conn_edit->query();
+    query << "SELECT * FROM `dishes_parts` WHERE `dishes_id`=" << dish_id;
+    mysqlpp::StoreQueryResult res = query.store();
+    if (res)
+    {
+        if (res.num_rows() != 0)
         {
-            if (res.num_rows() != 0){
-mysqlpp::Row row;
-mysqlpp::StoreQueryResult::size_type i;
-for (i = 0; i < res.num_rows(); ++i) {
-  row = res[i];
+            mysqlpp::Row row;
+            mysqlpp::StoreQueryResult::size_type i;
+            for (i = 0; i < res.num_rows(); ++i)
+            {
+                row = res[i];
                 int part_id = int(row["parts_id"]);
 
                 partes parts;
@@ -835,74 +895,85 @@ for (i = 0; i < res.num_rows(); ++i) {
                 parts.parts_id = part_id;
                 partes_array.Add(parts);
 
-              if(part_id == 0){//dobavliem ors
-        query << "SELECT * FROM `dishes_parts_ors` WHERE `dishes_parts_id`=" << int(row["id"]);
-        mysqlpp::StoreQueryResult res_ors = query.store();
-               if(res_ors){
-          std::string slices;
-              int first = 0;
-            mysqlpp::Row::size_type j;
-            for (j = 0; j < res_ors.num_rows(); ++j){
-                row = res_ors[j];
-            std::string slice_or = get_part_name(int(row["parts_id"]));
-                    if(first !=0){
-        slices += " OR " + slice_or;
-        }else{
-        slices = slice_or;
-        first = 1;
-            }
+                if(part_id == 0) //dobavliem ors
+                {
+                    query << "SELECT * FROM `dishes_parts_ors` WHERE `dishes_parts_id`=" << int(row["id"]);
+                    mysqlpp::StoreQueryResult res_ors = query.store();
+                    if(res_ors)
+                    {
+                        std::string slices;
+                        int first = 0;
+                        mysqlpp::Row::size_type j;
+                        for (j = 0; j < res_ors.num_rows(); ++j)
+                        {
+                            row = res_ors[j];
+                            std::string slice_or = get_part_name(int(row["parts_id"]));
+                            if(first !=0)
+                            {
+                                slices += " OR " + slice_or;
+                            }
+                            else
+                            {
+                                slices = slice_or;
+                                first = 1;
+                            }
+                        }
+                        parts_listbox->Append(std2wx(slices, wxConvUI));
+                    }
                 }
-        parts_listbox->Append(std2wx(slices, wxConvUI));
-                   }
-                  }else{
+                else
+                {
 
-        parts_listbox->Append(std2wx(get_part_name(part_id), wxConvUI));
+                    parts_listbox->Append(std2wx(get_part_name(part_id), wxConvUI));
 
-                      }
+                }
 
 
-            }
             }
         }
+    }
 
 //in future will return focus to the listbox, so this will be unnecessary
-or_button -> Disable();
+    or_button -> Disable();
 //move_button -> Disable();
-delete_part_button -> Disable();
-    }
+    delete_part_button -> Disable();
+}
 
 void editmenu::Onadd_in_menu_buttonClick(wxCommandEvent& event)
 {
 
-        if (!menu_in_textctrl -> IsEmpty())
+    if (!menu_in_textctrl -> IsEmpty())
     {
 
-      if(menu_listbox->GetSelection() != wxNOT_FOUND){
-        int exist=0;
-        for (unsigned int i = 0; i<menu_in_listbox->GetCount(); i++)
+        if(menu_listbox->GetSelection() != wxNOT_FOUND)
         {
-            if (menu_in_textctrl->GetValue() == menu_in_listbox->GetString(i))
+            int exist=0;
+            for (unsigned int i = 0; i<menu_in_listbox->GetCount(); i++)
             {
-                wxMessageBox(_("This name of dish already exists."));
-                exist = 1;
-                i=menu_in_listbox->GetCount();
+                if (menu_in_textctrl->GetValue() == menu_in_listbox->GetString(i))
+                {
+                    wxMessageBox(_("This name of dish already exists."));
+                    exist = 1;
+                    i=menu_in_listbox->GetCount();
+                }
+            }
+            if (exist == 0)
+            {
+                int kitchen = 1;
+                if(!dish_kitchen->GetValue()) kitchen = 0;
+
+                mysqlpp::Query query = conn_edit -> query();
+//            query << "INSERT INTO `post_rest`.`parts` (`id`, `name`, `group_id`) VALUES (NULL, '"<< wx2std(ing_textctrl->GetValue(), wxConvUI) <<"', '"<< group_array[group_choice->GetSelection()] <<"')";
+                query << "INSERT INTO `dishes` (`id`, `name`, `price`, `menu_id`, `kitchen`) VALUES (NULL, '"<< wx2std(menu_in_textctrl->GetValue(), wxConvUI) <<"', '', '" <<  menu_array[menu_listbox->GetSelection()] << "', '"<< kitchen <<"')";
+                query.execute();
+
+                refresh_menu_in();
+                menu_in_textctrl->Clear();
             }
         }
-        if (exist == 0)
+        else
         {
-int kitchen = 1;
-if(!dish_kitchen->GetValue()) kitchen = 0;
-
-            mysqlpp::Query query = conn_edit -> query();
-//            query << "INSERT INTO `post_rest`.`parts` (`id`, `name`, `group_id`) VALUES (NULL, '"<< wx2std(ing_textctrl->GetValue(), wxConvUI) <<"', '"<< group_array[group_choice->GetSelection()] <<"')";
-query << "INSERT INTO `dishes` (`id`, `name`, `price`, `menu_id`, `kitchen`) VALUES (NULL, '"<< wx2std(menu_in_textctrl->GetValue(), wxConvUI) <<"', '', '" <<  menu_array[menu_listbox->GetSelection()] << "', '"<< kitchen <<"')";
-            query.execute();
-
-            refresh_menu_in();
-            menu_in_textctrl->Clear();
-        }
-    }else{
-        wxMessageBox(_("You have to choose menu to which you want to add a dish."));
+            wxMessageBox(_("You have to choose menu to which you want to add a dish."));
         }
 
     }
@@ -910,98 +981,109 @@ query << "INSERT INTO `dishes` (`id`, `name`, `price`, `menu_id`, `kitchen`) VAL
 
 }
 
-std::string editmenu::get_part_name(int part_id){
+std::string editmenu::get_part_name(int part_id)
+{
 
-        std::string part_name;
-        mysqlpp::Query query = conn_edit->query();
-        query << "SELECT * FROM `parts` WHERE `id`=" << part_id;
-        mysqlpp::StoreQueryResult res = query.store();
+    std::string part_name;
+    mysqlpp::Query query = conn_edit->query();
+    query << "SELECT * FROM `parts` WHERE `id`=" << part_id;
+    mysqlpp::StoreQueryResult res = query.store();
 
-        if (res)
+    if (res)
+    {
+        if (res.num_rows() != 0)
         {
-            if (res.num_rows() != 0){
             mysqlpp::Row row = res.at(0);
             part_name = std::string(row["name"]);
-            }
         }
-        return part_name;
-
     }
+    return part_name;
+
+}
 
 void editmenu::Onmenu_in_listboxSelect(wxCommandEvent& event)
 {
-      if(menu_in_listbox->GetSelection() != wxNOT_FOUND){
+    if(menu_in_listbox->GetSelection() != wxNOT_FOUND)
+    {
         mysqlpp::Query query = conn_edit->query();
         query << "SELECT * FROM `dishes` WHERE `id`=" << menu_in_array[menu_in_listbox->GetSelection()];
         mysqlpp::StoreQueryResult res = query.store();
 
         if (res)
         {
-            if (res.num_rows() != 0){
-            mysqlpp::Row row = res.at(0);
-        fill_parts(menu_in_array[menu_in_listbox->GetSelection()]);
-        price_textctrl->Clear();
-        price_textctrl->AppendText(std2wx(std::string(row["price"]),wxConvUI));
-        comment_textctrl->Clear();
-        comment_textctrl->AppendText(std2wx(std::string(row["comment"]),wxConvUI));
-if(int(row["kitchen"]) == 1){
-dish_kitchen->SetValue(true);
-    }else{
-dish_kitchen->SetValue(false);
-        }
+            if (res.num_rows() != 0)
+            {
+                mysqlpp::Row row = res.at(0);
+                fill_parts(menu_in_array[menu_in_listbox->GetSelection()]);
+                price_textctrl->Clear();
+                price_textctrl->AppendText(std2wx(std::string(row["price"]),wxConvUI));
+                comment_textctrl->Clear();
+                comment_textctrl->AppendText(std2wx(std::string(row["comment"]),wxConvUI));
+                if(int(row["kitchen"]) == 1)
+                {
+                    dish_kitchen->SetValue(true);
+                }
+                else
+                {
+                    dish_kitchen->SetValue(false);
+                }
             }
         }
         menu_in_textctrl->Clear();
         menu_in_textctrl->AppendText(menu_in_listbox->GetStringSelection());
 
-    or_button -> Disable();
-    delete_part_button -> Disable();
-    save_part_button -> Enable();
+        or_button -> Disable();
+        delete_part_button -> Disable();
+        save_part_button -> Enable();
 
-    if(ing_listbox->GetSelection() != wxNOT_FOUND){
-    move_button -> Enable();
+        if(ing_listbox->GetSelection() != wxNOT_FOUND)
+        {
+            move_button -> Enable();
         }
     }
 }
 
 void editmenu::Onsave_part_buttonClick(wxCommandEvent& event)
 {
-        mysqlpp::Query query = conn_edit -> query();
-        query << "UPDATE `dishes` SET `price` = '" << wx2std(price_textctrl->GetValue(), wxConvUI)<< "', `comment` = '" << wx2std(comment_textctrl->GetValue(), wxConvUI) << "' WHERE `dishes`.`id` = " << menu_in_array[menu_in_listbox->GetSelection()] << " LIMIT 1";
-        query.execute();
+    mysqlpp::Query query = conn_edit -> query();
+    query << "UPDATE `dishes` SET `price` = '" << wx2std(price_textctrl->GetValue(), wxConvUI)<< "', `comment` = '" << wx2std(comment_textctrl->GetValue(), wxConvUI) << "' WHERE `dishes`.`id` = " << menu_in_array[menu_in_listbox->GetSelection()] << " LIMIT 1";
+    query.execute();
 }
 
 void editmenu::Ondelete_in_menu_buttonClick(wxCommandEvent& event)
 {
-    if(menu_in_listbox->GetSelection() != wxNOT_FOUND){
-    int dish_id = menu_in_array[menu_in_listbox->GetSelection()];
-    mysqlpp::Query query = conn_edit -> query();
-    query << "DELETE FROM `dishes` WHERE `dishes`.`id` = " << dish_id;
-    query.execute();
-    delete_parts_from_dish(dish_id);
-    refresh_menu_in();
-}
+    if(menu_in_listbox->GetSelection() != wxNOT_FOUND)
+    {
+        int dish_id = menu_in_array[menu_in_listbox->GetSelection()];
+        mysqlpp::Query query = conn_edit -> query();
+        query << "DELETE FROM `dishes` WHERE `dishes`.`id` = " << dish_id;
+        query.execute();
+        delete_parts_from_dish(dish_id);
+        refresh_menu_in();
+    }
 }
 
 void editmenu::Onmove_buttonClick(wxCommandEvent& event)
 {
-   if(ing_listbox->GetSelection() != wxNOT_FOUND){
+    if(ing_listbox->GetSelection() != wxNOT_FOUND)
+    {
 
         int part_id = ing_array[ing_listbox->GetSelection()];
         int dish_id = menu_in_array[menu_in_listbox->GetSelection()];
 
-    mysqlpp::Query query = conn_edit -> query();
-    query << "INSERT INTO `dishes_parts` (`id`, `dishes_id`, `parts_id`) VALUES (NULL, '"<< dish_id <<"', '"<< part_id <<"')";
-    query.execute();
+        mysqlpp::Query query = conn_edit -> query();
+        query << "INSERT INTO `dishes_parts` (`id`, `dishes_id`, `parts_id`) VALUES (NULL, '"<< dish_id <<"', '"<< part_id <<"')";
+        query.execute();
 
-      fill_parts(dish_id);
-       }
+        fill_parts(dish_id);
+    }
 }
 
 void editmenu::Onparts_listboxSelect(wxCommandEvent& event)
 {
-    if(ing_listbox->GetSelection() != wxNOT_FOUND){
-    or_button -> Enable();
+    if(ing_listbox->GetSelection() != wxNOT_FOUND)
+    {
+        or_button -> Enable();
     }
 
     delete_part_button -> Enable();
@@ -1011,7 +1093,8 @@ void editmenu::Onparts_listboxSelect(wxCommandEvent& event)
 
 void editmenu::Onor_buttonClick(wxCommandEvent& event)
 {
-       if(ing_listbox->GetSelection() != wxNOT_FOUND && parts_listbox->GetSelection() != wxNOT_FOUND){
+    if(ing_listbox->GetSelection() != wxNOT_FOUND && parts_listbox->GetSelection() != wxNOT_FOUND)
+    {
 
         int part_id = ing_array[ing_listbox->GetSelection()];// novyj, kotoryj budem dobavliat
         int dish_id = menu_in_array[menu_in_listbox->GetSelection()]; // nomer bliuda
@@ -1021,58 +1104,63 @@ void editmenu::Onor_buttonClick(wxCommandEvent& event)
 
         mysqlpp::Query query = conn_edit->query();
 
-        if(part_old_id != 0){ //here checking if this entry is already 0
-        query << "UPDATE `dishes_parts` SET `parts_id` = '0' WHERE `id` ="<< dishes_parts_id <<" LIMIT 1";
-        query.execute();
+        if(part_old_id != 0)  //here checking if this entry is already 0
+        {
+            query << "UPDATE `dishes_parts` SET `parts_id` = '0' WHERE `id` ="<< dishes_parts_id <<" LIMIT 1";
+            query.execute();
 
-        query << "INSERT INTO `dishes_parts_ors` (`id`, `dishes_parts_id`, `parts_id`) VALUES (NULL, '"<< dishes_parts_id <<"', '"<< part_old_id <<"')";
-        query.execute();
+            query << "INSERT INTO `dishes_parts_ors` (`id`, `dishes_parts_id`, `parts_id`) VALUES (NULL, '"<< dishes_parts_id <<"', '"<< part_old_id <<"')";
+            query.execute();
         }
 
         query << "INSERT INTO `dishes_parts_ors` (`id`, `dishes_parts_id`, `parts_id`) VALUES (NULL, '"<< dishes_parts_id <<"', '"<< part_id <<"')";
         query.execute();
 
         fill_parts(dish_id);
-       }
+    }
 }
 
 void editmenu::Ondelete_part_buttonClick(wxCommandEvent& event)
 {
-        if(parts_listbox->GetSelection() != wxNOT_FOUND){
+    if(parts_listbox->GetSelection() != wxNOT_FOUND)
+    {
         int dishes_parts_id = partes_array[parts_listbox->GetSelection()].dishes_parts_id;
         int parts_id = partes_array[parts_listbox->GetSelection()].parts_id;
         mysqlpp::Query query = conn_edit -> query();
 
         query << "DELETE FROM `dishes_parts` WHERE `id` = " << dishes_parts_id;
         query.execute();
-            if(parts_id ==0){
-        query << "DELETE FROM `dishes_parts_ors` WHERE `dishes_parts_id` = " << dishes_parts_id;
-        query.execute();
+        if(parts_id ==0)
+        {
+            query << "DELETE FROM `dishes_parts_ors` WHERE `dishes_parts_id` = " << dishes_parts_id;
+            query.execute();
 
-                }
-
-         //   partes_array.RemoveAt(parts_listbox->GetSelection(), 1);
-
-          //  parts_listbox -> Delete (parts_listbox->GetSelection());
-            int dish_id = menu_in_array[menu_in_listbox->GetSelection()]; // nomer bliuda
-          fill_parts(dish_id);
-            }
-}
-
-void editmenu::save_dish(void){
-  //     if(menu_in_listbox->GetSelection() != wxNOT_FOUND){
-
-    wxString parts_for_save;
-    for (int i = 0; i < parts_array.GetCount(); i++){
-        parts_for_save += parts_array[i] + _(":");
         }
 
-        mysqlpp::Query query = conn_edit -> query();
-        query << "UPDATE `dishes` SET `parts` = '" << wx2std(parts_for_save, wxConvUI) << "' WHERE `dishes`.`id` = " << menu_in_array[menu_in_listbox->GetSelection()] << " LIMIT 1";
-        query.execute();
- //       }
+        //   partes_array.RemoveAt(parts_listbox->GetSelection(), 1);
 
+        //  parts_listbox -> Delete (parts_listbox->GetSelection());
+        int dish_id = menu_in_array[menu_in_listbox->GetSelection()]; // nomer bliuda
+        fill_parts(dish_id);
     }
+}
+
+void editmenu::save_dish(void)
+{
+    //     if(menu_in_listbox->GetSelection() != wxNOT_FOUND){
+
+    wxString parts_for_save;
+    for (int i = 0; i < parts_array.GetCount(); i++)
+    {
+        parts_for_save += parts_array[i] + _(":");
+    }
+
+    mysqlpp::Query query = conn_edit -> query();
+    query << "UPDATE `dishes` SET `parts` = '" << wx2std(parts_for_save, wxConvUI) << "' WHERE `dishes`.`id` = " << menu_in_array[menu_in_listbox->GetSelection()] << " LIMIT 1";
+    query.execute();
+//       }
+
+}
 
 void editmenu::On_lost_focus_price_textctrl(wxCommandEvent& event)
 {
@@ -1081,7 +1169,8 @@ void editmenu::On_lost_focus_price_textctrl(wxCommandEvent& event)
 
 
 
-void editmenu::refresh_taxes(void){
+void editmenu::refresh_taxes(void)
+{
     taxes_choice -> Clear();
     taxes_array.Clear();
     mysqlpp::Query query = conn_edit->query();
@@ -1089,20 +1178,22 @@ void editmenu::refresh_taxes(void){
     mysqlpp::StoreQueryResult res = query.store();
     if (res)
     {
-            if (res.num_rows() != 0){
-mysqlpp::Row row;
-mysqlpp::StoreQueryResult::size_type i;
-for (i = 0; i < res.num_rows(); ++i) {
-  row = res[i];
-            std::string tax_name = std::string(row["name"]);
-            taxes_choice->Append(std2wx(tax_name, wxConvUI));
-            taxes_array.Add(int(row["id"]));
-        }
+        if (res.num_rows() != 0)
+        {
+            mysqlpp::Row row;
+            mysqlpp::StoreQueryResult::size_type i;
+            for (i = 0; i < res.num_rows(); ++i)
+            {
+                row = res[i];
+                std::string tax_name = std::string(row["name"]);
+                taxes_choice->Append(std2wx(tax_name, wxConvUI));
+                taxes_array.Add(int(row["id"]));
             }
+        }
     }
     taxes_choice->SetSelection(0);
 
-    }
+}
 
 void editmenu::OnButton1Click(wxCommandEvent& event)
 {

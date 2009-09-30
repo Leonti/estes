@@ -1,3 +1,21 @@
+/*************************************************************************************
+*  Estes - Restaurant Point Of Sale                                                  *
+*  Copyright (C) 2009  Leonti Bielski                                                *
+*                                                                                    *
+*  This program is free software; you can redistribute it and/or modify              *
+*  it under the terms of the GNU General Public License as published by              *
+*  the Free Software Foundation; either version 2 of the License, or                 *
+*  (at your option) any later version.                                               *
+*                                                                                    *
+*  This program is distributed in the hope that it will be useful,                   *
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of                    *
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                     *
+*  GNU General Public License for more details.                                      *
+*                                                                                    *
+*  You should have received a copy of the GNU General Public License                 *
+*  along with this program; if not, write to the Free Software                       *
+*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA    *
+*************************************************************************************/
 #include "taxes.h"
 
 //(*InternalHeaders(taxes)
@@ -97,16 +115,18 @@ void taxes::fill_all()
     mysqlpp::StoreQueryResult res = query.store();
     if (res)
     {
-            if (res.num_rows() != 0){
-mysqlpp::Row row;
-mysqlpp::StoreQueryResult::size_type i;
-for (i = 0; i < res.num_rows(); ++i) {
-  row = res[i];
-            std::string tax_name = std::string(row["name"]);
-            ListBox1->Append(std2wx(tax_name, wxConvUI));
-            tax_ids.Add(int(row["id"]));
-        }
+        if (res.num_rows() != 0)
+        {
+            mysqlpp::Row row;
+            mysqlpp::StoreQueryResult::size_type i;
+            for (i = 0; i < res.num_rows(); ++i)
+            {
+                row = res[i];
+                std::string tax_name = std::string(row["name"]);
+                ListBox1->Append(std2wx(tax_name, wxConvUI));
+                tax_ids.Add(int(row["id"]));
             }
+        }
     }
 }
 
@@ -121,15 +141,16 @@ void taxes::OnListBox1Select(wxCommandEvent& event)
 
         if (res)
         {
-            if (res.num_rows() != 0){
-            mysqlpp::Row row = res.at(0);
-            TextCtrl2 -> Clear();
-            wxString percent;
-            percent << double(row["value"]);
-            TextCtrl2 -> AppendText(percent);
-            TextCtrl1 -> Clear();
-            TextCtrl1 -> AppendText(std2wx(std::string(row["name"]),wxConvUI));
-        }
+            if (res.num_rows() != 0)
+            {
+                mysqlpp::Row row = res.at(0);
+                TextCtrl2 -> Clear();
+                wxString percent;
+                percent << double(row["value"]);
+                TextCtrl2 -> AppendText(percent);
+                TextCtrl1 -> Clear();
+                TextCtrl1 -> AppendText(std2wx(std::string(row["name"]),wxConvUI));
+            }
         }
 
 
@@ -155,7 +176,7 @@ void taxes::OnButton3Click(wxCommandEvent& event)
 void taxes::OnButton1Click(wxCommandEvent& event)
 {
     // if (ListBox1->GetSelection() != wxNOT_FOUND)
-       if (!TextCtrl1->IsEmpty())
+    if (!TextCtrl1->IsEmpty())
     {
         int exist=0;
         for (unsigned int i = 0; i<ListBox1->GetCount(); i++)
@@ -188,25 +209,26 @@ void taxes::OnButton1Click(wxCommandEvent& event)
 
 void taxes::OnButton2Click(wxCommandEvent& event)
 {
-    if (ListBox1->GetSelection() != wxNOT_FOUND){
-
-
-            if (!TextCtrl1->IsEmpty())
+    if (ListBox1->GetSelection() != wxNOT_FOUND)
     {
+
+
+        if (!TextCtrl1->IsEmpty())
+        {
 //                int selected = ListBox1 -> GetSelection();
             double tax_rate;
             TextCtrl2 -> GetValue().ToDouble(&tax_rate);
 
-        mysqlpp::Query query = conn_taxes -> query();
-        query << "UPDATE `taxes` SET `name` = '"<<wx2std(TextCtrl1->GetValue(), wxConvUI)<<"', `value` = '" << tax_rate << "' WHERE `taxes`.`id` = "<< tax_ids[ListBox1 -> GetSelection()] <<" LIMIT 1;";
-        query.execute();
+            mysqlpp::Query query = conn_taxes -> query();
+            query << "UPDATE `taxes` SET `name` = '"<<wx2std(TextCtrl1->GetValue(), wxConvUI)<<"', `value` = '" << tax_rate << "' WHERE `taxes`.`id` = "<< tax_ids[ListBox1 -> GetSelection()] <<" LIMIT 1;";
+            query.execute();
 
 
             fill_all();
             TextCtrl2->Clear();
             TextCtrl1->Clear();
- //           ListBox1 -> SetSelection(selected);
+//           ListBox1 -> SetSelection(selected);
 
-    }
         }
+    }
 }

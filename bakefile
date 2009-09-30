@@ -1,0 +1,7 @@
+#! /bin/sh
+bakefile -f autoconf build/bakefiles/estes.bkl
+cp build/bakefiles/Makefile.in Makefile.in
+cp build/bakefiles/autoconf_inc.m4 autoconf_inc.m4
+bakefilize --copy
+aclocal
+autoconf 

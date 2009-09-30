@@ -16,68 +16,76 @@
 *  along with this program; if not, write to the Free Software                       *
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA    *
 *************************************************************************************/
-#ifndef DB_SET_PANEL_H
-#define DB_SET_PANEL_H
+#ifndef ABOUT_H
+#define ABOUT_H
 
-//(*Headers(db_set_panel)
-#include <wx/checkbox.h>
+//(*Headers(about)
+#include <wx/dialog.h>
 #include <wx/sizer.h>
+#include <wx/notebook.h>
+#include <wx/button.h>
 #include <wx/panel.h>
+#include <wx/statline.h>
 #include <wx/stattext.h>
-#include <wx/textctrl.h>
 //*)
-#include <wx/msgdlg.h>
-#include <wx/config.h>
-#include <string>
-#include <mysql++.h>
-#include <iostream>
-#include "wx_std.h"
-#include "backup.h"
 
-class db_set_panel: public wxPanel
+class about: public wxDialog
 {
 public:
 
-    db_set_panel(wxWindow* parent,wxWindowID id=wxID_ANY,const wxPoint& pos=wxDefaultPosition,const wxSize& size=wxDefaultSize);
-    virtual ~db_set_panel();
+    about(wxWindow* parent,wxWindowID id=wxID_ANY,const wxPoint& pos=wxDefaultPosition,const wxSize& size=wxDefaultSize);
+    virtual ~about();
 
-    //(*Declarations(db_set_panel)
-    wxTextCtrl* TextCtrl3;
-    wxCheckBox* CheckBox1;
+    //(*Declarations(about)
+    wxPanel* Panel1;
+    wxButton* Button1;
     wxStaticText* StaticText1;
+    wxStaticText* StaticText10;
+    wxPanel* Panel2;
     wxStaticText* StaticText3;
-    wxCheckBox* CheckBox2;
-    wxTextCtrl* TextCtrl1;
+    wxStaticLine* StaticLine1;
+    wxStaticText* StaticText8;
+    wxStaticText* StaticText12;
+    wxStaticLine* StaticLine3;
+    wxStaticText* StaticText7;
     wxStaticText* StaticText4;
     wxStaticText* StaticText5;
     wxStaticText* StaticText2;
-    wxTextCtrl* TextCtrl4;
-    wxTextCtrl* TextCtrl2;
+    wxNotebook* Notebook1;
+    wxStaticText* StaticText6;
+    wxStaticLine* StaticLine4;
+    wxStaticText* StaticText9;
+    wxStaticText* StaticText11;
     //*)
-    void Save(void);
-    wxConfigBase *confi;
-    mysqlpp::Connection * conn;
-    void fill_all(void);
-    bool dbase_connected;
+
 protected:
 
-    //(*Identifiers(db_set_panel)
+    //(*Identifiers(about)
     static const long ID_STATICTEXT1;
+    static const long ID_STATICTEXT12;
     static const long ID_STATICTEXT2;
-    static const long ID_TEXTCTRL1;
+    static const long ID_STATICLINE3;
     static const long ID_STATICTEXT3;
-    static const long ID_TEXTCTRL2;
+    static const long ID_STATICTEXT8;
+    static const long ID_STATICTEXT9;
+    static const long ID_STATICLINE4;
     static const long ID_STATICTEXT4;
-    static const long ID_TEXTCTRL3;
     static const long ID_STATICTEXT5;
-    static const long ID_TEXTCTRL4;
-    static const long ID_CHECKBOX2;
-    static const long ID_CHECKBOX1;
+    static const long ID_STATICTEXT6;
+    static const long ID_STATICTEXT7;
+    static const long ID_STATICLINE1;
+    static const long ID_PANEL2;
+    static const long ID_STATICTEXT10;
+    static const long ID_STATICTEXT11;
+    static const long ID_PANEL1;
+    static const long ID_NOTEBOOK1;
+    static const long ID_BUTTON1;
     //*)
 
 private:
 
-    //(*Handlers(db_set_panel)
+    //(*Handlers(about)
+    void OnButton1Click(wxCommandEvent& event);
     //*)
 
     DECLARE_EVENT_TABLE()

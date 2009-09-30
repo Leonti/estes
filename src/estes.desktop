@@ -6,5 +6,6 @@ Exec=estes
 Icon=estes
 Terminal=false
 Type=Application
-Categories=Utility;Applications;
+Categories=Utility;
+X-SuSE-translate=false
  

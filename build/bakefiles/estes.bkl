@@ -57,6 +57,7 @@ cash.cpp
 backup.cpp
 workers.cpp
 restaurant_posMain.cpp
+about.cpp
 </sources>
 
 
